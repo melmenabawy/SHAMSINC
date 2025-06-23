@@ -1260,3 +1260,55 @@ a:hover {
     </script>
 </body>
 </html>
+
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Set the language - auto from browser or manual override
+    let lang = navigator.language.startsWith("ar") ? "ar" : "en";
+
+    function updateLanguage(lang) {
+        document.querySelectorAll("[data-en]").forEach(el => {
+            el.textContent = el.getAttribute("data-" + lang);
+        });
+
+        // For <option> elements inside <select>
+        document.querySelectorAll("option[data-en]").forEach(opt => {
+            opt.textContent = opt.getAttribute("data-" + lang);
+        });
+    }
+
+    updateLanguage(lang); // Call on page load
+
+    // Optional: manually toggle
+    // updateLanguage('en'); or updateLanguage('ar');
+    
+    // Handle form submission via JavaScript
+    document.getElementById("quoteForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const form = e.target;
+
+        fetch("https://formspree.io/f/mkgbqqpr", {
+            method: "POST",
+            headers: { 'Accept': 'application/json' },
+            body: new FormData(form)
+        })
+        .then(response => {
+            if (response.ok) {
+                form.reset();
+                const msg = document.getElementById("successMessage");
+                msg.style.display = "block";
+                updateLanguage(lang); // update success message language
+            } else {
+                alert("Error: Could not send form.");
+            }
+        })
+        .catch(() => alert("Error: Network issue."));
+    });
+});
+</script>
+
