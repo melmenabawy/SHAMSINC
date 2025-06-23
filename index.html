@@ -1312,3 +1312,27 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+fetch("https://formspree.io/f/mkgbqqpr", {
+    method: "POST",
+    headers: { 'Accept': 'application/json' },
+    body: new FormData(form)
+})
+.then(response => {
+    console.log("Status:", response.status);
+    return response.json().then(data => ({ ok: response.ok, data }));
+})
+.then(result => {
+    if (result.ok) {
+        form.reset();
+        const msg = document.getElementById("successMessage");
+        msg.style.display = "block";
+        updateLanguage(lang);
+    } else {
+        console.error("Formspree error:", result.data);
+        alert("Error: " + (result.data?.error || "Could not send form."));
+    }
+})
+.catch(error => {
+    console.error("Network error:", error);
+    alert("Network error: Check your internet connection or CORS settings.");
+});
