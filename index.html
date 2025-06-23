@@ -1070,8 +1070,25 @@ a:hover {
             </div>
             
             <div class="copyright">
-                <p data-en="&copy; 2024 Shams Inc. All Rights Reserved." data-ar="&copy; 2024 مؤسسة شمس. جميع الحقوق محفوظة.">&copy; 2024 Shams Inc. All Rights Reserved.</p>
-            </div>
+  <!-- English -->
+  <p data-en="&copy; 2024 Shams Inc. All Rights Reserved;">
+    &copy; <span id="year-en"></span> Shams Inc. All Rights Reserved.
+  </p>
+
+  <!-- Arabic -->
+  <p data-ar="&copy; 2024 مؤسسة شمس. جميع الحقوق محفوظة;">
+    &copy; <span id="year-ar"></span> مؤسسة شمس. جميع الحقوق محفوظة.
+  </p>
+</div>
+
+<script>
+  const currentYear = new Date().getFullYear();
+  document.getElementById('year-en').textContent = currentYear;
+  document.getElementById('year-ar').textContent = currentYear;
+</script>
+
+
+            
         </div>
     </footer>
 
