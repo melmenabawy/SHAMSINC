@@ -757,53 +757,78 @@
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section class="section services" id="services">
-        <div class="container">
-            <div class="section-title">
-                <h2 data-en="Our Products & Services" data-ar="منتجاتنا وخدماتنا">Our Products & Services</h2>
-            </div>
-            
-            <div class="services-grid">
-                <!-- Service 1 -->
-                <div class="service-card">
-                    <div class="service-img">
-                        <img src="images\Uniform.jpg" alt="Uniforms">
-                    </div>
-                    <div class="service-content">
-                        <h3 data-en="Custom Uniforms" data-ar="الزي الرسمي الموحد">Custom Uniforms</h3>
-                        <p data-en="We supply official uniforms (uniforms) with printing and embroidery, as well as workwear and some promotional gifts in many sectors including medical and healthcare, hotel and hospitality, industrial, school, service, printing, and many other different fields." data-ar="نورد الرزي الرسمي الموحد (اليونيقورم) بالطباعة والتطريز الصافتر وأيضا بطلقات العمل وبعض الهدايا الدفاعية في العديد من القطاعات منها الطبي والرعاية الصحية، الفندق والضيافة، الصناعي، المدرس ي، اخلدمي، والمطابع، والمعالءم والعديد من المجالات الأخرى المختلفة">We supply official uniforms (uniforms) with printing and embroidery, as well as workwear and some promotional gifts in many sectors including medical and healthcare, hotel and hospitality, industrial, school, service, printing, and many other different fields.</p>
-                    </div>
-                </div>
-                
-                <!-- Service 2 -->
+   <style>
+  .service-img {
+    width: 100%;
+    max-width: 300px; /* adjust max width as needed */
+    overflow: hidden;
+    margin: 0 auto; /* center images if you want */
+  }
 
-                
-                <div class="service-card">
-                    <div class="service-img">
-                        <img src="images\Linen.jpg" alt="Bed Linens">
-                    </div>
-                    <div class="service-content">
-                        <h3 data-en="Bed Linens & Supplies" data-ar="ملاءات السرير واللوازم">Bed Linens & Supplies</h3>
-                        <p data-en="High-quality bed linens for hotels, hospitals, and healthcare facilities. We provide durable, comfortable, and hygienic solutions tailored to your specific needs." data-ar="ملاءات سرير عالية الجودة للفنادق والمستشفيات والمرافق الصحية. نقدم حلولاً متينة ومريحة وصحية مصممة خصيصًا لتلبية احتياجاتك.">High-quality bed linens for hotels, hospitals, and healthcare facilities. We provide durable, comfortable, and hygienic solutions tailored to your specific needs.</p>
-                    </div>
-                </div>
-                
-                <!-- Service 3 -->
+  .service-img img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+  
+  /* Optional: style to arrange the cards nicely */
+  .services-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
 
-                
-                <div class="service-card">
-                    <div class="service-img">
-                        <img src="images/Business accessories.jpg" alt="Business Accessories">
-                    </div>
-                    <div class="service-content">
-                        <h3 data-en="Business Accessories" data-ar="الاكسسوارات التجارية">Business Accessories</h3>
-                        <p data-en="Professional business cards and promotional gifts to complement your corporate identity and strengthen your brand presence in the market." data-ar="بطاقات عمل احترافية وهدايا ترويجية لتكملة هويتك المؤسسية وتعزيز حضور علامتك التجارية في السوق.">Professional business cards and promotional gifts to complement your corporate identity and strengthen your brand presence in the market.</p>
-                    </div>
-                </div>
-            </div>
+  .service-card {
+    flex: 1 1 300px; /* flexible width, min 300px */
+    box-sizing: border-box;
+  }
+</style>
+
+<!-- Services Section -->
+<section class="section services" id="services">
+  <div class="container">
+    <div class="section-title">
+      <h2 data-en="Our Products & Services" data-ar="منتجاتنا وخدماتنا">Our Products & Services</h2>
+    </div>
+
+    <div class="services-grid">
+      <!-- Service 1 -->
+      <div class="service-card">
+        <div class="service-img">
+          <img src="images/Uniform.jpg" alt="Uniforms">
         </div>
-    </section>
+        <div class="service-content">
+          <h3 data-en="Custom Uniforms" data-ar="الزي الرسمي الموحد">Custom Uniforms</h3>
+          <p data-en="We supply official uniforms (uniforms) with printing and embroidery, as well as workwear and some promotional gifts in many sectors including medical and healthcare, hotel and hospitality, industrial, school, service, printing, and many other different fields." data-ar="نورد الرزي الرسمي الموحد (اليونيقورم) بالطباعة والتطريز الصافتر وأيضا بطلقات العمل وبعض الهدايا الدفاعية في العديد من القطاعات منها الطبي والرعاية الصحية، الفندق والضيافة، الصناعي، المدرس ي، اخلدمي، والمطابع، والمعالءم والعديد من المجالات الأخرى المختلفة">We supply official uniforms (uniforms) with printing and embroidery, as well as workwear and some promotional gifts in many sectors including medical and healthcare, hotel and hospitality, industrial, school, service, printing, and many other different fields.</p>
+        </div>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="service-card">
+        <div class="service-img">
+          <img src="images/Linen.jpg" alt="Bed Linens">
+        </div>
+        <div class="service-content">
+          <h3 data-en="Bed Linens & Supplies" data-ar="ملاءات السرير واللوازم">Bed Linens & Supplies</h3>
+          <p data-en="High-quality bed linens for hotels, hospitals, and healthcare facilities. We provide durable, comfortable, and hygienic solutions tailored to your specific needs." data-ar="ملاءات سرير عالية الجودة للفنادق والمستشفيات والمرافق الصحية. نقدم حلولاً متينة ومريحة وصحية مصممة خصيصًا لتلبية احتياجاتك.">High-quality bed linens for hotels, hospitals, and healthcare facilities. We provide durable, comfortable, and hygienic solutions tailored to your specific needs.</p>
+        </div>
+      </div>
+
+      <!-- Service 3 -->
+      <div class="service-card">
+        <div class="service-img">
+          <img src="images/Business accessories.jpg" alt="Business Accessories">
+        </div>
+        <div class="service-content">
+          <h3 data-en="Business Accessories" data-ar="الاكسسوارات التجارية">Business Accessories</h3>
+          <p data-en="Professional business cards and promotional gifts to complement your corporate identity and strengthen your brand presence in the market." data-ar="بطاقات عمل احترافية وهدايا ترويجية لتكملة هويتك المؤسسية وتعزيز حضور علامتك التجارية في السوق.">Professional business cards and promotional gifts to complement your corporate identity and strengthen your brand presence in the market.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
     <!-- Industries Section -->
     <section class="section" id="industries">
