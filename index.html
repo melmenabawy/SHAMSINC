@@ -387,11 +387,13 @@
             display: flex;
             flex-wrap: wrap;
             gap: 40px;
+            align-items: flex-start;
         }
         
         .contact-info {
             flex: 1;
             min-width: 300px;
+            max-width: 40%;
         }
         
         .contact-info h3 {
@@ -437,8 +439,9 @@
         }
         
         .contact-form {
-            flex: 1;
+            flex: 2;
             min-width: 300px;
+            max-width: 60%;
             background-color: var(--white);
             padding: 30px;
             border-radius: 8px;
@@ -482,7 +485,17 @@
             min-height: 120px;
             resize: vertical;
         }
-        
+        @media (max-width: 768px) {
+       .contact-container {
+        flex-direction: column;
+        }
+
+  .contact-info,
+  .contact-form {
+    max-width: 100%;
+  }
+}
+
         /* Footer */
         footer {
             background-color: var(--secondary-color);
