@@ -1083,7 +1083,7 @@ a:hover {
 
 
 
-            <form action="https://formspree.io/f/mkgbqqpr" method="POST">
+          <form id="quoteForm">
   <div class="contact-form">
     <h3 data-en="Request a Quote" data-ar="طلب عرض سعر">Request a Quote</h3>
 
@@ -1143,6 +1143,9 @@ a:hover {
     <button class="btn" type="submit" data-en="Submit Request" data-ar="إرسال الطلب">Submit Request</button>
   </div>
 </form>
+
+<!-- Add this empty div to show the result -->
+<div id="formResponse" style="margin-top: 20px; font-weight: bold;"></div>
 
 
             
@@ -1306,22 +1309,67 @@ a:hover {
                 }
             });
         });
+
+
+
+        <script>
+  const quoteForm = document.getElementById('quoteForm');
+  const formResponse = document.getElementById('formResponse');
+
+  quoteForm.addEventListener('submit', function (e) {
+    e.preventDefault(); // prevent reloading the page
+
+    const formData = new FormData(quoteForm);
+
+    fetch('https://formspree.io/f/mkgbqqpr', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        const isArabic = document.body.classList.contains('rtl');
+        const message = isArabic
+          ? 'شكرا لطلبك! سنتواصل معك قريبا.'
+          : 'Thank you for your request! We will contact you soon.';
+
+        formResponse.innerText = message;
+        formResponse.style.color = 'green';
+        quoteForm.reset();
+      } else {
+        formResponse.innerText = 'Something went wrong. Please try again.';
+        formResponse.style.color = 'red';
+      }
+    }).catch(function () {
+      formResponse.innerText = 'Error submitting the form.';
+      formResponse.style.color = 'red';
+    });
+  });
+
+
+
+
+
+
+
         
         // Form submission
-        const quoteForm = document.getElementById('quoteForm');
-        quoteForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+       // const quoteForm = document.getElementById('quoteForm');
+        //quoteForm.addEventListener('submit', function(e) {
+          //  e.preventDefault();
             
             // Here you would typically send the form data to your server
             // For now, we'll just show an alert
-            const currentLang = body.classList.contains('rtl') ? 'ar' : 'en';
-            const message = currentLang === 'en' 
-                ? 'Thank you for your request! We will contact you soon.' 
-                : 'شكرا لطلبك! سنتواصل معك قريبا.';
+            //const currentLang = body.classList.contains('rtl') ? 'ar' : 'en';
+            //const message = currentLang === 'en' 
+              //  ? 'Thank you for your request! We will contact you soon.' 
+                //: 'شكرا لطلبك! سنتواصل معك قريبا.';
             
-            alert(message);
-            quoteForm.reset();
-        });
+            //alert(message);
+            //quoteForm.reset();
+        //});
     </script>
+            
 </body>
 </html>
