@@ -441,7 +441,7 @@
         .contact-form {
             flex: 2;
             min-width: 300px;
-            max-width: 60%;
+            max-width: 1000%;
             background-color: var(--white);
             padding: 30px;
             border-radius: 8px;
@@ -661,101 +661,11 @@
             }
         }
         
-        @media (max-width: 768px) {
-            .hero {
-                height: 70vh;
-                margin-top: 70px;
-            }
-            
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
-            }
-            
-            .btn {
-                padding: 10px 20px;
-            }
-            
-            .section {
-                padding: 60px 0;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .hero {
-                height: 60vh;
-            }
-            
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .btn-group {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .btn-outline {
-                margin-left: 0;
-            }
-        }
+       
 
 
 
-
-
- /* Make all labels white for the form */
-#quoteForm label {
-  color: #ffffff;
-}
-
-/* Make inputs, selects, and textareas full width */
-#quoteForm input,
-#quoteForm select,
-#quoteForm textarea {
-  width: 100%;         /* Fill container properly */
-  padding: 140px 40px;  /* Larger padding for visual size */
-  font-size: 1.1rem;   /* Bigger font */
-}
-
-/* Add padding, rounded corners, and light background */
-#quoteForm input,
-#quoteForm select,
-#quoteForm textarea {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  color: #000000;
-  margin-top: 5px;
-}
-
-/* Spacing between form groups */
-#quoteForm .form-group {
-  margin-bottom: 20px;
-}
-
-/* Style the submit button */
-#quoteForm button.btn {
-  padding: 10px 20px;
-  background-color: #007bff;
-  border: none;
-  color: white;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* Hover effect for submit button */
-#quoteForm button.btn:hover {
-  background-color: #0056b3;
-}
-
-
+ 
 
 
         
@@ -1153,10 +1063,11 @@ a:hover {
 
 
         <!--    <form action="https://formspree.io/f/mkgbqqpr" method="POST"> -->
-            <form id="quoteForm">
+            
 
- <!--    <div class="contact-form"> -->
-   <div><h3 data-en="Request a Quote" data-ar="طلب عرض سعر">Request a Quote</h3></div>
+   <div class="contact-form"> 
+       <form id="quoteForm">
+   <h3 data-en="Request a Quote" data-ar="طلب عرض سعر">Request a Quote</h3>
 
     <div class="form-group">
       <label for="company" data-en="Company Name" data-ar="اسم الشركة">Company Name</label>
@@ -1214,7 +1125,7 @@ a:hover {
     <button class="btn" type="submit" data-en="Submit Request" data-ar="إرسال الطلب">Submit Request</button>
   </div>
 </form>
-
+</div>
 <div id="formResponse" style="margin-top: 20px; font-weight: bold;"></div>
 
             
