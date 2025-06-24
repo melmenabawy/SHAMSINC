@@ -378,7 +378,7 @@
         
         /* Contact Section */
         .contact {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('images/Contact.jpeg') no-repeat center center/cover;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('images/Contact.jpeg') no-repeat center center/cover;
             color: var(--white);
             padding: 40px 0;
         }
@@ -396,9 +396,11 @@
             max-width: 40%;
         }
         
-       .contact-info h3 {
+     .contact-info h3 {
+    font-size: 2rem;
+    margin-bottom: 20px; /* This maintains space below heading */
     position: relative;
-    display: inline-block; /* Makes the width fit content */
+    padding-bottom: 15px; /* This creates space for the line */
 }
 
 .contact-info h3::after {
@@ -406,10 +408,18 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%; /* Now spans full text width */
+    width: 100%; /* Full width of text */
     height: 3px;
     background-color: var(--accent-color);
 }
+
+/* For RTL languages */
+.rtl .contact-info h3::after {
+    left: auto;
+    right: 0;
+}
+
+        
         
         .contact-info p {
             margin-bottom: 30px;
