@@ -1082,21 +1082,70 @@ a:hover {
 -->
 
 
-<form
-  action="https://formspree.io/f/mkgbqqpr"
-  method="POST"
->
-  <label>
-    Your email:
-    <input type="email" name="email">
-  </label>
-  <label>
-    Your message:
-    <textarea name="message"></textarea>
-  </label>
-  <!-- your other form fields go here -->
-  <button type="submit">Send</button>
+
+            <form action="https://formspree.io/f/mkgbqqpr" method="POST">
+  <div class="contact-form">
+    <h3 data-en="Request a Quote" data-ar="طلب عرض سعر">Request a Quote</h3>
+
+    <div class="form-group">
+      <label for="company" data-en="Company Name" data-ar="اسم الشركة">Company Name</label>
+      <input id="company" class="form-control" name="company" required type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="name" data-en="Contact Person" data-ar="اسم المسؤول">Contact Person</label>
+      <input id="name" class="form-control" name="name" required type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="email" data-en="Email" data-ar="البريد الإلكتروني">Email</label>
+      <input id="email" class="form-control" name="email" required type="email" />
+    </div>
+
+    <div class="form-group">
+      <label for="phone" data-en="Phone Number" data-ar="رقم الهاتف">Phone Number</label>
+      <input id="phone" class="form-control" name="phone" required type="tel" />
+    </div>
+
+    <div class="form-group">
+      <label for="industry" data-en="Industry" data-ar="القطاع">Industry</label>
+      <select id="industry" class="form-control" name="industry" required>
+        <option value="" data-en="Select Industry" data-ar="اختر القطاع">Select Industry</option>
+        <option value="healthcare" data-en="Healthcare" data-ar="الرعاية الصحية">Healthcare</option>
+        <option value="hospitality" data-en="Hospitality" data-ar="الضيافة">Hospitality</option>
+        <option value="industrial" data-en="Industrial" data-ar="الصناعي">Industrial</option>
+        <option value="education" data-en="Education" data-ar="التعليم">Education</option>
+        <option value="corporate" data-en="Corporate" data-ar="الشركات">Corporate</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="service" data-en="Product/Service Needed" data-ar="المنتج/الخدمة المطلوبة">Product/Service Needed</label>
+      <select id="service" class="form-control" name="service" required>
+        <option value="" data-en="Select Service" data-ar="اختر الخدمة">Select Service</option>
+        <option value="uniforms" data-en="Custom Uniforms" data-ar="الزي الموحد">Custom Uniforms</option>
+        <option value="linens" data-en="Bed Linens" data-ar="ملاءات السرير">Bed Linens</option>
+        <option value="business-cards" data-en="Business Cards" data-ar="بطاقات العمل">Business Cards</option>
+        <option value="promotional" data-en="Promotional Gifts" data-ar="الهدايا الدعائية">Promotional Gifts</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="quantity" data-en="Quantity (if applicable)" data-ar="الكمية (إن وجدت)">Quantity (if applicable)</label>
+      <input id="quantity" class="form-control" name="quantity" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="message" data-en="Additional Requirements" data-ar="متطلبات إضافية">Additional Requirements</label>
+      <textarea id="message" class="form-control" name="message"></textarea>
+    </div>
+
+    <button class="btn" type="submit" data-en="Submit Request" data-ar="إرسال الطلب">Submit Request</button>
+  </div>
 </form>
+
+
+            
 
 
 
