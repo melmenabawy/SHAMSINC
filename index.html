@@ -1083,8 +1083,10 @@ a:hover {
 
 
 
-            <form action="https://formspree.io/f/mkgbqqpr" method="POST">
-  <div class="contact-form">
+        <!--    <form action="https://formspree.io/f/mkgbqqpr" method="POST"> -->
+            <form id="quoteForm">
+
+ <!--    <div class="contact-form"> -->
     <h3 data-en="Request a Quote" data-ar="طلب عرض سعر">Request a Quote</h3>
 
     <div class="form-group">
@@ -1144,6 +1146,7 @@ a:hover {
   </div>
 </form>
 
+<div id="formResponse" style="margin-top: 20px; font-weight: bold;"></div>
 
             
 
@@ -1308,7 +1311,7 @@ a:hover {
         });
         
         // Form submission
-        const quoteForm = document.getElementById('quoteForm');
+       /* const quoteForm = document.getElementById('quoteForm');
         quoteForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -1321,7 +1324,47 @@ a:hover {
             
             alert(message);
             quoteForm.reset();
-        });
+        });*/
+
+     
+  const quoteForm = document.getElementById('quoteForm');
+  const formResponse = document.getElementById('formResponse');
+
+  quoteForm.addEventListener('submit', async function (e) {
+    e.preventDefault(); // Stop default form submission (and redirect)
+
+    const formData = new FormData(quoteForm);
+
+    try {
+      const response = await fetch("https://formspree.io/f/mkgbqqpr", {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json'
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        const isArabic = document.body.classList.contains('rtl');
+        const message = isArabic
+          ? 'شكرا لطلبك! سنتواصل معك قريبا.'
+          : 'Thank you for your request! We will contact you soon.';
+        
+        formResponse.innerText = message;
+        formResponse.style.color = 'green';
+        quoteForm.reset();
+      } else {
+        const data = await response.json();
+        formResponse.innerText = data?.errors?.[0]?.message || 'Something went wrong. Please try again.';
+        formResponse.style.color = 'red';
+      }
+    } catch (error) {
+      formResponse.innerText = 'Error submitting the form.';
+      formResponse.style.color = 'red';
+    }
+  });
+
+
     </script>
 </body>
 </html>
