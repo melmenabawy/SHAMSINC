@@ -506,17 +506,66 @@
             min-height: 120px;
             resize: vertical;
         }
-        @media (max-width: 768px) {
-       .contact-container {
-        flex-direction: column;
-        }
+       @media (max-width: 768px) {
+  .contact-container {
+    flex-direction: column;
+    gap: 30px; /* Added spacing between stacked elements */
+  }
 
   .contact-info,
   .contact-form {
     max-width: 100%;
+    width: 100%; /* Ensures full width */
+  }
+
+  .contact-form {
+    padding: 25px 20px; /* Better mobile padding */
+  }
+
+  .form-group {
+    margin-bottom: 18px; /* Tighter but still comfortable spacing */
+  }
+
+  .form-control {
+    padding: 14px 16px; /* Better mobile input sizing */
+    font-size: 1rem;
+  }
+
+  /* Make all form elements properly responsive */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  select,
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Better mobile buttons */
+  .btn {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 1.1rem;
+  }
+
+  /* Slightly smaller headings on mobile */
+  .contact-info h3,
+  .contact-form h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
   }
 }
 
+        @media (max-width: 480px) {
+  .contact-form {
+    padding: 20px 15px;
+  }
+  .form-control {
+    padding: 12px 14px;
+  }
+}
+
+        
         /* Footer */
         footer {
             background-color: var(--secondary-color);
