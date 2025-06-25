@@ -731,117 +731,7 @@
             }
         }
         
-/* Gallery Styles */
-.gallery-section {
-    padding: 60px 0;
-}
-
-.gallery-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    margin-top: 30px;
-}
-
-.gallery-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    aspect-ratio: 1/1;
-    transition: var(--transition);
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: var(--transition);
-}
-
-.gallery-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.gallery-item:hover img {
-    transform: scale(1.05);
-}
-
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    overflow: auto;
-}
-
-.modal-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 20px;
-}
-
-.modal-img {
-    max-width: 90%;
-    max-height: 80vh;
-    object-fit: contain;
-}
-
-.close {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    color: white;
-    font-size: 35px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.caption {
-    color: white;
-    text-align: center;
-    margin-top: 15px;
-    font-size: 1.2rem;
-}
-
-/* Navigation arrows */
-.prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    width: auto;
-    padding: 16px;
-    margin-top: -22px;
-    color: white;
-    font-weight: bold;
-    font-size: 30px;
-    transition: 0.3s;
-    user-select: none;
-}
-
-.next {
-    right: 0;
-    border-radius: 3px 0 0 3px;
-}
-
-.prev {
-    left: 0;
-    border-radius: 0 3px 3px 0;
-}
-
-.prev:hover, .next:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-        
+       
 
 
 
@@ -851,60 +741,6 @@
         
     </style>
 </head>
-
-    // Gallery Modal Functionality
-let currentGallery = '';
-let currentIndex = 0;
-
-function openGallery(galleryId, index) {
-    currentGallery = galleryId;
-    currentIndex = index;
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
-    const caption = document.getElementById('caption');
-    
-    const galleryItems = document.querySelectorAll(`#${galleryId} .gallery-item img`);
-    modalImg.src = galleryItems[index].src;
-    caption.textContent = galleryItems[index].alt;
-    
-    modal.style.display = "block";
-    document.body.style.overflow = "hidden";
-}
-
-function closeModal() {
-    document.getElementById('imageModal').style.display = "none";
-    document.body.style.overflow = "auto";
-}
-
-function changeImage(n) {
-    const galleryItems = document.querySelectorAll(`#${currentGallery} .gallery-item img`);
-    currentIndex += n;
-    
-    if (currentIndex >= galleryItems.length) { currentIndex = 0; }
-    if (currentIndex < 0) { currentIndex = galleryItems.length - 1; }
-    
-    const modalImg = document.getElementById('modalImage');
-    const caption = document.getElementById('caption');
-    modalImg.src = galleryItems[currentIndex].src;
-    caption.textContent = galleryItems[currentIndex].alt;
-}
-
-// Close modal when clicking outside image
-window.onclick = function(event) {
-    const modal = document.getElementById('imageModal');
-    if (event.target == modal) {
-        closeModal();
-    }
-}
-
-// Close with ESC key
-document.addEventListener('keydown', function(event) {
-    if (event.key === "Escape") {
-        closeModal();
-    }
-});
-
-        
 <body>
     <!-- Header -->
     <header>
@@ -1016,96 +852,78 @@ document.addEventListener('keydown', function(event) {
 
 <!-- Services Section -->
 <section class="section services" id="services">
-    <div class="container">
-        <div class="section-title">
-            <h2 data-en="Our Products & Services" data-ar="منتجاتنا وخدماتنا">Our Products & Services</h2>
-        </div>
-
-        <!-- Custom Uniforms -->
-        <div class="service-card">
-            <div class="service-img">
-                <img src="images\Uniform.jpg" alt="Uniforms">
-            </div>
-            <div class="service-content">
-                <h3 data-en="Custom Uniforms" data-ar="الزي الرسمي الموحد">Custom Uniforms</h3>
-                <p data-en="We supply official uniforms with printing and embroidery..." data-ar="نوفر الزي الرسمي الرسمي مع الطباعة والتطريز...">...</p>
-                
-                <!-- Gallery Section -->
-                <div class="gallery-section">
-                    <h4 data-en="Our Uniform Gallery" data-ar="معرض الأزياء">Our Uniform Gallery</h4>
-                    <div id="uniformsGallery" class="gallery-container">
-                        <div class="gallery-item" onclick="openGallery('uniformsGallery', 0)">
-                            <img src="images/uniforms/uniform1.jpg" alt="Medical Uniform">
-                        </div>
-                        <div class="gallery-item" onclick="openGallery('uniformsGallery', 1)">
-                            <img src="images/uniforms/uniform2.jpg" alt="Hospitality Uniform">
-                        </div>
-                        <div class="gallery-item" onclick="openGallery('uniformsGallery', 2)">
-                            <img src="images/uniforms/uniform3.jpg" alt="Corporate Uniform">
-                        </div>
-                        <div class="gallery-item" onclick="openGallery('uniformsGallery', 3)">
-                            <img src="images/uniforms/uniform4.jpg" alt="Industrial Uniform">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Repeat similar structure for other services -->
-        <div class="service-card">
-            <div class="service-img">
-                <img src="images\Linen.jpg" alt="Bed Linens">
-            </div>
-            <div class="service-content">
-                <h3 data-en="Bed Linens & Supplies" data-ar="مفروشات متميزة">Premium furnishings</h3>
-                <p data-en="High-quality premium furnishings and supplies..." data-ar="مفروشات متميزة وامدادات عالية الجودة...">...</p>
-                
-                <!-- Gallery Section -->
-                <div class="gallery-section">
-                    <h4 data-en="Our Linens Gallery" data-ar="معرض المفروشات">Our Linens Gallery</h4>
-                    <div id="linensGallery" class="gallery-container">
-                        <div class="gallery-item" onclick="openGallery('linensGallery', 0)">
-                            <img src="images/linens/linen1.jpg" alt="Hotel Bed Linens">
-                        </div>
-                        <div class="gallery-item" onclick="openGallery('linensGallery', 1)">
-                            <img src="images/linens/linen2.jpg" alt="Hospital Bed Sheets">
-                        </div>
-                        <div class="gallery-item" onclick="openGallery('linensGallery', 2)">
-                            <img src="images/linens/linen3.jpg" alt="Premium Pillows">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Business Accessories -->
-        <div class="service-card">
-            <div class="service-img">
-                <img src="images\Business accessories.jpg" alt="Business Accessories">
-            </div>
-            <div class="service-content">
-                <h3 data-en="Business Accessories" data-ar="الاكسسوارات التجارية">Business Accessories</h3>
-                <p data-en="Professional business cards and promotional gifts..." data-ar="بطاقات عمل احترافية وهدايا ترويجية...">...</p>
-                
-                <!-- Gallery Section -->
-                <div class="gallery-section">
-                    <h4 data-en="Our Accessories Gallery" data-ar="معرض الإكسسوارات">Our Accessories Gallery</h4>
-                    <div id="accessoriesGallery" class="gallery-container">
-                        <div class="gallery-item" onclick="openGallery('accessoriesGallery', 0)">
-                            <img src="images/accessories/accessory1.jpg" alt="Business Cards">
-                        </div>
-                        <div class="gallery-item" onclick="openGallery('accessoriesGallery', 1)">
-                            <img src="images/accessories/accessory2.jpg" alt="Promotional Gifts">
-                        </div>
-                        <div class="gallery-item" onclick="openGallery('accessoriesGallery', 2)">
-                            <img src="images/accessories/accessory3.jpg" alt="Corporate Gifts">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <div class="section-title">
+      <h2 data-en="Our Products & Services" data-ar="منتجاتنا وخدماتنا">Our Products & Services</h2>
     </div>
+
+    <div class="services-grid">
+      <!-- Service 1 -->
+      <div class="service-card">
+        <div class="service-img">
+          <img src="images\Uniform.jpg" alt="Uniforms">
+        </div>
+        <div class="service-content">
+          <h3 data-en="Custom Uniforms" data-ar="الزي الرسمي الموحد">Custom Uniforms</h3>
+
+
+<p 
+  data-en="We supply official uniforms with printing and embroidery, alongside workwear and promotional gifts across diverse sectors including medical and healthcare, hospitality, industrial, education, service, printing, and many other fields."
+  data-ar="نوفر الزي الرسمي الرسمي مع الطباعة والتطريز، بالإضافة إلى ملابس العمل والهدايا الترويجية في العديد من القطاعات المتنوعة مثل الطبية والصحية، الضيافة، الصناعة، التعليم، الخدمات، الطباعة، والعديد من المجالات الأخرى."
+>
+  We supply official uniforms with printing and embroidery, alongside workwear and promotional gifts across diverse sectors including medical and healthcare, hospitality, industrial, education, service, printing, and many other fields.
+</p>
+
+
+
+            
+        </div>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="service-card">
+        <div class="service-img">
+          <img src="images\Linen.jpg" alt="Bed Linens">
+        </div>
+        <div class="service-content">
+          <h3 data-en="Bed Linens & Supplies" data-ar="مفروشات متميزة">Premium furnishings</h3>
+
+
+<p 
+  data-en="High-quality premium furnishings and supplies for hotels, hospitals, and healthcare facilities. We offer durable, comfortable, and hygienic solutions customized to meet your specific requirements."
+  data-ar="مفروشات متميزة وامدادات عالية الجودة للفنادق والمستشفيات والمرافق الصحية. نقدم حلولاً متينة ومريحة وصحية مصممة خصيصًا لتلبية احتياجاتكم."
+>
+  High-quality Premium furnishings and supplies for hotels, hospitals, and healthcare facilities. We offer durable, comfortable, and hygienic solutions customized to meet your specific requirements.
+</p>
+
+
+            
+        </div>
+      </div>
+
+      <!-- Service 3 -->
+      <div class="service-card">
+        <div class="service-img">
+          <img src="images\Business accessories.jpg" alt="Business Accessories">
+        </div>
+        <div class="service-content">
+          <h3 data-en="Business Accessories" data-ar="الاكسسوارات التجارية">Business Accessories</h3>
+
+<p 
+  data-en="Professional business cards and promotional gifts designed to complement your corporate identity and enhance your brand presence in the marketplace."
+  data-ar="بطاقات عمل احترافية وهدايا ترويجية مصممة لتكملة هويتك المؤسسية وتعزيز حضور علامتك التجارية في السوق."
+>
+  Professional business cards and promotional gifts designed to complement your corporate identity and enhance your brand presence in the marketplace.
+</p>
+
+
+            
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+
     <!-- Industries Section -->
     <section class="section" id="industries">
         <div class="container">
