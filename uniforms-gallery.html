@@ -729,69 +729,79 @@
             }
         });
         
-        // Gallery Functionality
-        let currentIndex = 0;
-        let imageUrls = [];
-        const galleryContainer = document.getElementById('uniformsGallery');
-        const loader = document.getElementById('loader');
+
+    // Gallery Functionality
+    let currentIndex = 0;
+    let imageUrls = [];
+    const galleryContainer = document.getElementById('uniformsGallery');
+    const loader = document.getElementById('loader');
+    
+    // Function to check if an image exists
+    function checkImageExists(url) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = url;
+        });
+    }
+    
+    // Function to load only existing uniform images
+    async function loadUniformImages() {
+        loader.style.display = 'block';
+        galleryContainer.innerHTML = '';
+        imageUrls = [];
         
-        // Function to load all uniform images from the images/uniforms folder
-        async function loadUniformImages() {
-            loader.style.display = 'block';
-            galleryContainer.innerHTML = '';
+        try {
+            // Set this to the maximum number of images you have
+            const maxImagesToCheck = 10; // CHANGE THIS to your actual maximum image count
             
-            try {
-                // In a real implementation, you would fetch this from your server
-                // For this example, we'll simulate loading up to 100 images
-                const maxImagesToCheck = 10;
-                const loadedImages = [];
-                
-                // Check which images exist (in a real app, you'd get this list from your server)
-                for (let i = 1; i <= maxImagesToCheck; i++) {
-                    const imgUrl = `images/uniforms/uniform${i}.jpg`;
-                    
-                    // In a real implementation, you would check if the image exists on the server
-                    // For this demo, we'll assume all images exist up to a certain number
-                    // Replace this with actual image existence checking in your implementation
-                    loadedImages.push(imgUrl);
+            // Check for sequentially numbered images
+            for (let i = 1; i <= maxImagesToCheck; i++) {
+                const imgUrl = `images/uniforms/uniform${i}.jpg`;
+                if (await checkImageExists(imgUrl)) {
+                    imageUrls.push(imgUrl);
                 }
-                
-                // If you want to limit the number for demo purposes:
-                // loadedImages = loadedImages.slice(0, 12); // Show first 12 for demo
-                
-                imageUrls = loadedImages;
-                
-                if (imageUrls.length === 0) {
-                    galleryContainer.innerHTML = '<p data-en="No uniform images found" data-ar="لا توجد صور للزي الموحد">No uniform images found</p>';
-                    return;
-                }
-                
-                // Create gallery items
-                imageUrls.forEach((url, index) => {
-                    const galleryItem = document.createElement('div');
-                    galleryItem.className = 'gallery-item';
-                    
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.alt = `Uniform ${index + 1}`;
-                    img.loading = 'lazy';
-                    
-                    // Preload image to ensure it's cached
-                    const tempImg = new Image();
-                    tempImg.src = url;
-                    
-                    galleryItem.appendChild(img);
-                    galleryItem.addEventListener('click', () => openModal(index));
-                    galleryContainer.appendChild(galleryItem);
-                });
-                
-            } catch (error) {
-                console.error('Error loading images:', error);
-                galleryContainer.innerHTML = '<p data-en="Error loading images" data-ar="حدث خطأ في تحميل الصور">Error loading images</p>';
-            } finally {
-                loader.style.display = 'none';
+                // Continue checking even if some numbers are missing
             }
+            
+            if (imageUrls.length === 0) {
+                const noImagesMsg = document.createElement('div');
+                noImagesMsg.className = 'no-images';
+                noImagesMsg.innerHTML = '<p data-en="No uniform images found" data-ar="لا توجد صور للزي الموحد">No uniform images found</p>';
+                galleryContainer.appendChild(noImagesMsg);
+                return;
+            }
+            
+            // Create gallery items for existing images
+            imageUrls.forEach((url, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = `Uniform ${index + 1}`;
+                img.loading = 'lazy';
+                
+                galleryItem.appendChild(img);
+                galleryItem.addEventListener('click', () => openModal(index));
+                galleryContainer.appendChild(galleryItem);
+            });
+            
+        } catch (error) {
+            console.error('Error loading images:', error);
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'no-images';
+            errorMsg.innerHTML = '<p data-en="Error loading images" data-ar="حدث خطأ في تحميل الصور">Error loading images</p>';
+            galleryContainer.appendChild(errorMsg);
+        } finally {
+            loader.style.display = 'none';
         }
+    }
+
+    // Keep all other existing functions the same
+    // ... (rest of your code remains unchanged)
+
         
         // Modal functions
         function openModal(index) {
