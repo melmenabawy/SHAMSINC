@@ -766,7 +766,17 @@
                 
                 // Check which images exist by attempting to load them
                 for (let i = 1; i <= maxImagesToCheck; i++) {
-                    const imgUrl = `images/uniforms/uniform${i}.jpg`;
+                    // Check multiple image formats
+const formats = ['jpg', 'jpeg', 'png', 'webp'];
+let imgUrl = '';
+for (const format of formats) {
+    const testUrl = `images/uniforms/uniform${i}.${format}`;
+    if (await checkImageExists(testUrl)) {
+        imgUrl = testUrl;
+        break;
+    }
+}
+if (!imgUrl) continue; // Skip if no image found
                     const exists = await checkImageExists(imgUrl);
                     
                     if (exists) {
