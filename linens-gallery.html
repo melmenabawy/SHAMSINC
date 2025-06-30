@@ -189,61 +189,45 @@
             margin: 0 auto;
         }
         
+        /* Gallery Container - Ensures square grid */
         .gallery-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 25px;
         }
-        
-       /* Gallery Container - Ensures square grid */
-.gallery-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
-}
 
-/* Gallery Item - Square container */
-.gallery-item {
-    width: 100%;
-    padding-bottom: 100%; /* Creates a square aspect ratio (1:1) */
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: var(--transition);
-    background-color: #f8f9fa; /* Fallback background */
-}
+        /* Gallery Item - Square container */
+        .gallery-item {
+            width: 100%;
+            padding-bottom: 100%; /* Creates a square aspect ratio (1:1) */
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            background-color: #f8f9fa; /* Fallback background */
+            cursor: pointer;
+        }
 
-/* Image - Fits inside square without cropping */
-.gallery-item img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Shows full image (no crop) */
-    padding: 10px; /* Optional: Adds spacing inside the square */
-    background-color: white; /* Background for empty space */
-    transition: var(--transition);
-}
+        /* Image - Fits inside square without cropping */
+        .gallery-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Shows full image (no crop) */
+            padding: 10px; /* Optional: Adds spacing inside the square */
+            background-color: white; /* Background for empty space */
+            transition: var(--transition);
+        }
 
-/* Hover Effect (Optional) */
-.gallery-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.gallery-item:hover img {
-    transform: scale(1.05);
-}
-        
+        /* Hover Effect (Optional) */
         .gallery-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
-        
-    
-        
+
         .gallery-item:hover img {
             transform: scale(1.05);
         }
@@ -259,6 +243,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.9);
             overflow: auto;
+            touch-action: pan-y;
         }
         
         .modal-content {
@@ -296,6 +281,8 @@
             font-weight: bold;
             cursor: pointer;
             transition: var(--transition);
+            z-index: 10;
+            padding: 10px;
         }
         
         .rtl .close {
@@ -319,31 +306,58 @@
             font-size: 20px;
             transition: var(--transition);
             user-select: none;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .next {
-            right: 0;
-            border-radius: 3px 0 0 3px;
+            right: 20px;
         }
         
         .rtl .next {
             right: auto;
-            left: 0;
+            left: 20px;
         }
         
         .prev {
-            left: 0;
-            border-radius: 0 3px 3px 0;
+            left: 20px;
         }
         
         .rtl .prev {
             left: auto;
-            right: 0;
+            right: 20px;
         }
         
         .prev:hover, .next:hover {
             background-color: rgba(0, 0, 0, 0.8);
             color: var(--accent-color);
+        }
+        
+        /* Loading spinner */
+        .loader {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            z-index: 1001;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
         /* Footer Styles */
@@ -522,14 +536,17 @@
                 gap: 20px;
             }
             
-            .gallery-item {
-                height: 220px;
+            .prev, .next {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
             }
         }
         
         @media (max-width: 480px) {
             .gallery-container {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
             }
             
             .gallery-header h1 {
@@ -539,10 +556,31 @@
             .gallery-header p {
                 font-size: 1rem;
             }
+            
+            .close {
+                top: 10px;
+                right: 10px;
+                font-size: 30px;
+            }
+            
+            .rtl .close {
+                right: auto;
+                left: 10px;
+            }
+            
+            .prev, .next {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+                padding: 12px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Spinner -->
+    <div class="loader" id="loader"></div>
+
     <!-- Header -->
     <header>
         <div class="container header-container">
@@ -582,49 +620,11 @@
             
             <div class="gallery-header">
                 <h1 data-en="Medical & Hospitality Textiles Gallery" data-ar="معرض المنسوجات الطبية والفندقية">Medical & Hospitality Textiles Gallery</h1>
-                <p data-en="Browse our collection of medical & hospitality textiles" data-ar="تصفح مجموعتنا من منسوجات طبية وفندقية ">Browse our collection of medical & hospitality textiles</p>
+                <p data-en="Browse our collection of medical & hospitality textiles" data-ar="تصفح مجموعتنا من منسوجات طبية وفندقية">Browse our collection of medical & hospitality textiles</p>
             </div>
             
             <div id="linensGallery" class="gallery-container">
-                <!-- Image 1 -->
-                <div class="gallery-item">
-                    <img src="images/linens/linen1.jpg" alt="">
-                </div>
-                
-                <!-- Image 2 -->
-                <div class="gallery-item">
-                    <img src="images/linens/linen2.jpg" alt="">
-                </div>
-                
-                <!-- Image 3 -->
-                <div class="gallery-item">
-                    <img src="images/linens/linen3.jpg" alt="">
-                </div>
-                
-                <!-- Image 4 -->
-                <div class="gallery-item">
-                    <img src="images/linens/linen4.jpg" alt="">
-                </div>
-                
-                <!-- Image 5 -->
-                <div class="gallery-item">
-                    <img src="images/linens/linen5.jpg" alt="">
-                </div>
-                
-                <!-- Image 6 -->
-                <div class="gallery-item">
-                    <img src="images/linens/linen6.jpg" alt="">
-                </div>
-                
-                <!-- Image 7 -->
-                <div class="gallery-item">
-                    <img src="images/linens/linen7.jpg" alt="">
-                </div>
-                
-                <!-- Image 8 -->
-                <div class="gallery-item">
-                    <img src="images/linens/linen8.jpg" alt="">
-                </div>
+                <!-- Images will be loaded dynamically by JavaScript -->
             </div>
         </div>
     </section>
@@ -633,7 +633,7 @@
     <div id="imageModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
         <div class="modal-content">
-            <img id="modalImage" class="modal-img">
+            <img id="modalImage" class="modal-img" src="" alt="">
             <div id="caption" class="caption"></div>
         </div>
         <a class="prev" onclick="changeImage(-1)">&#10094;</a>
@@ -646,7 +646,7 @@
             <div class="footer-container">
                 <div class="footer-about">
                     <img src="images/SHAMSINC.webp" class="footer-logo">
-                    <p data-en="We are committed to providing high-quality uniforms and medical & hospitality textiles to businesses across Saudi Arabia. Guided by our dedication to excellence, professionalism, and customer satisfaction, we support the Kingdom's vision for regional and global growth. Through our products and services, we empower organizations to strengthen their brand identity and compete effectively in diverse sectors." data-ar="نحن ملتزمون بتوفير زي رسمي عالي الجودة ومنسوجات طبية وفندقية للشركات في جميع أنحاء المملكة العربية السعودية. مسترشدين بتفانينا في التميز والاحترافية ورضا العملاء، ندعم رؤية المملكة للنمو الإقليمي والعالمي. من خلال منتجاتنا وخدماتنا، نمكّن المؤسسات من تعزيز هويتها التجارية والمنافسة بفعالية في مختلف القطاعات..">We are committed to providing high-quality uniforms and medical & hospitality textiles to businesses across Saudi Arabia. Guided by our dedication to excellence, professionalism, and customer satisfaction, we support the Kingdom's vision for regional and global growth. Through our products and services, we empower organizations to strengthen their brand identity and compete effectively in diverse sectors.</p>
+                    <p data-en="We are committed to providing high-quality uniforms and medical & hospitality textiles to businesses across Saudi Arabia. Guided by our dedication to excellence, professionalism, and customer satisfaction, we support the Kingdom's vision for regional and global growth. Through our products and services, we empower organizations to strengthen their brand identity and compete effectively in diverse sectors." data-ar="نحن ملتزمون بتوفير زي رسمي عالي الجودة ومنسوجات طبية وفندقية للشركات في جميع أنحاء المملكة العربية السعودية. مسترشدين بتفانينا في التميز والاحترافية ورضا العملاء، ندعم رؤية المملكة للنمو الإقليمي والعالمي. من خلال منتجاتنا وخدماتنا، نمكّن المؤسسات من تعزيز هويتها التجارية والمنافسة بفعالية في مختلف القطاعات.">We are committed to providing high-quality uniforms and medical & hospitality textiles to businesses across Saudi Arabia. Guided by our dedication to excellence, professionalism, and customer satisfaction, we support the Kingdom's vision for regional and global growth. Through our products and services, we empower organizations to strengthen their brand identity and compete effectively in diverse sectors.</p>
                     
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -660,11 +660,11 @@
                     <h3 data-en="Quick Links" data-ar="روابط سريعة">Quick Links</h3>
                     <ul>
                         <li><a href="index.html" data-en="Home" data-ar="الرئيسية">Home</a></li>
-                        <li><a href="index.html#about" data-en="About Us" data-ar="من نحن">About Us</a></li>
-                        <li><a href="index.html#services" data-en="Services" data-ar="الخدمات">Services</a></li>
-                        <li><a href="index.html#industries" data-en="Industries" data-ar="القطاعات">Industries</a></li>
-                        <li><a href="index.html#partners" data-en="Partners" data-ar="شركاؤنا">Partners</a></li>
-                        <li><a href="index.html#contact" data-en="Contact" data-ar="اتصل بنا">Contact</a></li>
+                        <li><a href="index.html#about" class="nav-link" data-en="About Us" data-ar="من نحن">About Us</a></li>
+                        <li><a href="index.html#services" class="nav-link" data-en="Services" data-ar="الخدمات">Services</a></li>
+                        <li><a href="index.html#industries" class="nav-link" data-en="Industries" data-ar="القطاعات">Industries</a></li>
+                        <li><a href="index.html#partners" class="nav-link" data-en="Partners" data-ar="شركاؤنا">Partners</a></li>
+                        <li><a href="index.html#contact" class="nav-link" data-en="Contact" data-ar="اتصل بنا">Contact</a></li>
                     </ul>
                 </div>
                 
@@ -728,111 +728,172 @@
                 icon.classList.add('fa-bars');
             }
         });
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                if (this.getAttribute('href') === '#') return;
-                
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 90,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Close mobile menu if open
-                    if (mainNav.classList.contains('active')) {
-                        mainNav.classList.remove('active');
-                        const icon = mobileMenuBtn.querySelector('i');
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
-                }
-            });
-        });
-        
-        // Gallery Modal Functionality
-        let currentGallery = '';
+
+        // Gallery Functionality
         let currentIndex = 0;
-        let currentImages = [];
-
-        // Initialize gallery items
-        document.addEventListener('DOMContentLoaded', function() {
-            const galleryItems = document.querySelectorAll('#linensGallery .gallery-item');
-            currentImages = Array.from(galleryItems).map(item => {
-                const img = item.querySelector('img');
-                return {
-                    src: img.src,
-                    alt: img.alt
-                };
+        let imageUrls = [];
+        const galleryContainer = document.getElementById('linensGallery');
+        const loader = document.getElementById('loader');
+        
+        // Function to check if an image exists
+        function checkImageExists(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
             });
+        }
+        
+        // Function to load only existing linen images
+        async function loadLinenImages() {
+            loader.style.display = 'block';
+            galleryContainer.innerHTML = '';
+            imageUrls = [];
             
-            // Add click event to each gallery item
-            galleryItems.forEach((item, index) => {
-                item.addEventListener('click', () => {
-                    openGallery('linensGallery', index);
+            try {
+                // Set this to the maximum number of images you have
+                const maxImagesToCheck = 8; // CHANGE THIS to your actual maximum image count
+                
+                // Check for sequentially numbered images
+                for (let i = 1; i <= maxImagesToCheck; i++) {
+                    const imgUrl = `images/linens/linen${i}.jpg`;
+                    if (await checkImageExists(imgUrl)) {
+                        imageUrls.push(imgUrl);
+                    }
+                    // Continue checking even if some numbers are missing
+                }
+                
+                if (imageUrls.length === 0) {
+                    const noImagesMsg = document.createElement('div');
+                    noImagesMsg.className = 'no-images';
+                    noImagesMsg.innerHTML = '<p data-en="No linen images found" data-ar="لا توجد صور للمنسوجات">No linen images found</p>';
+                    galleryContainer.appendChild(noImagesMsg);
+                    return;
+                }
+                
+                // Create gallery items for existing images
+                imageUrls.forEach((url, index) => {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.className = 'gallery-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = `Linen ${index + 1}`;
+                    img.loading = 'lazy';
+                    
+                    galleryItem.appendChild(img);
+                    galleryItem.addEventListener('click', () => openModal(index));
+                    galleryContainer.appendChild(galleryItem);
                 });
-            });
-            
-            // Set current year in footer
-            const currentYear = new Date().getFullYear();
-            document.getElementById('year-en').textContent = currentYear;
-            document.getElementById('year-ar').textContent = currentYear;
-        });
-
-        function openGallery(galleryId, index) {
-            currentGallery = galleryId;
+                
+            } catch (error) {
+                console.error('Error loading images:', error);
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'no-images';
+                errorMsg.innerHTML = '<p data-en="Error loading images" data-ar="حدث خطأ في تحميل الصور">Error loading images</p>';
+                galleryContainer.appendChild(errorMsg);
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+        
+        // Modal functions
+        function openModal(index) {
             currentIndex = index;
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
             const caption = document.getElementById('caption');
             
-            modalImg.src = currentImages[index].src;
-            caption.textContent = currentImages[index].alt;
+            modalImg.src = imageUrls[index];
+            caption.textContent = `Linen ${index + 1}`;
             
             modal.style.display = "block";
             document.body.style.overflow = "hidden";
+            
+            // Prevent background scrolling on mobile
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
         }
-
+        
         function closeModal() {
             document.getElementById('imageModal').style.display = "none";
             document.body.style.overflow = "auto";
+            
+            // Re-enable background scrolling
+            document.body.style.position = '';
+            document.body.style.width = '';
         }
-
+        
         function changeImage(n) {
             currentIndex += n;
             
-            if (currentIndex >= currentImages.length) { currentIndex = 0; }
-            if (currentIndex < 0) { currentIndex = currentImages.length - 1; }
+            if (currentIndex >= imageUrls.length) { currentIndex = 0; }
+            if (currentIndex < 0) { currentIndex = imageUrls.length - 1; }
             
             const modalImg = document.getElementById('modalImage');
             const caption = document.getElementById('caption');
-            modalImg.src = currentImages[currentIndex].src;
-            caption.textContent = currentImages[currentIndex].alt;
+            modalImg.src = imageUrls[currentIndex];
+            caption.textContent = `Linen ${currentIndex + 1}`;
         }
-
+        
         // Close modal when clicking outside image
-        window.onclick = function(event) {
+        document.addEventListener('click', function(event) {
             const modal = document.getElementById('imageModal');
-            if (event.target == modal) {
+            if (event.target === modal) {
                 closeModal();
             }
-        }
-
-        // Close with ESC key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === "Escape") {
-                closeModal();
-            }
-            if (event.key === "ArrowLeft") {
-                changeImage(-1);
-            }
-            if (event.key === "ArrowRight") {
+        });
+        
+        // Touch events for mobile swipe
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+        
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+        
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left - next image
                 changeImage(1);
             }
+            
+            if (touchEndX > touchStartX + 50) {
+                // Swipe right - previous image
+                changeImage(-1);
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('imageModal');
+            if (modal.style.display === 'block') {
+                if (event.key === "Escape") {
+                    closeModal();
+                }
+                if (event.key === "ArrowLeft") {
+                    changeImage(-1);
+                }
+                if (event.key === "ArrowRight") {
+                    changeImage(1);
+                }
+            }
+        });
+        
+        // Set current year in footer
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentYear = new Date().getFullYear();
+            document.getElementById('year-en').textContent = currentYear;
+            document.getElementById('year-ar').textContent = currentYear;
+            
+            // Load images when page loads
+            loadLinenImages();
         });
     </script>
 </body>
