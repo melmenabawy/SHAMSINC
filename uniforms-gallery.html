@@ -754,49 +754,70 @@
             });
         }
         
-        // Function to load only existing uniform images
-        async function loadUniformImages() {
-            loader.style.display = 'block';
-            galleryContainer.innerHTML = '';
-            imageUrls = [];
+     // Function to load only existing uniform images
+async function loadUniformImages() {
+    loader.style.display = 'block';
+    galleryContainer.innerHTML = '';
+    imageUrls = [];
+    
+    try {
+        const maxImagesToCheck = 100; // Maximum number of images to check
+        const existingImages = [];
+        
+        // Check which images exist by attempting to load them
+        for (let i = 1; i <= maxImagesToCheck; i++) {
+            // Check multiple image formats
+            const formats = ['jpg', 'jpeg', 'png', 'webp'];
+            let imgFound = false;
             
-            try {
-                const maxImagesToCheck = 100; // Maximum number of images to check
-                const existingImages = [];
-                
-                // Check which images exist by attempting to load them
-                for (let i = 1; i <= maxImagesToCheck; i++) {
-                    // Check multiple image formats
-const formats = ['jpg', 'jpeg', 'png', 'webp'];
-let imgUrl = '';
-for (const format of formats) {
-    const testUrl = `images/uniforms/uniform${i}.${format}`;
-    if (await checkImageExists(testUrl)) {
-        imgUrl = testUrl;
-        break;
+            for (const format of formats) {
+                const imgUrl = `images/uniforms/uniform${i}.${format}`;
+                if (await checkImageExists(imgUrl)) {
+                    existingImages.push(imgUrl);
+                    imgFound = true;
+                    break;
+                }
+            }
+            
+            // If no image found in any format, stop checking (assuming sequential numbering)
+            if (!imgFound) break;
+        }
+        
+        imageUrls = existingImages;
+        
+        if (imageUrls.length === 0) {
+            const noImagesMsg = document.createElement('div');
+            noImagesMsg.className = 'no-images';
+            noImagesMsg.innerHTML = '<p data-en="No uniform images found" data-ar="لا توجد صور للزي الموحد">No uniform images found</p>';
+            galleryContainer.appendChild(noImagesMsg);
+            return;
+        }
+        
+        // Create gallery items for existing images only
+        imageUrls.forEach((url, index) => {
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+            
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = `Uniform ${index + 1}`;
+            img.loading = 'lazy';
+            
+            galleryItem.appendChild(img);
+            galleryItem.addEventListener('click', () => openModal(index));
+            galleryContainer.appendChild(galleryItem);
+        });
+        
+    } catch (error) {
+        console.error('Error loading images:', error);
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'no-images';
+        errorMsg.innerHTML = '<p data-en="Error loading images" data-ar="حدث خطأ في تحميل الصور">Error loading images</p>';
+        galleryContainer.appendChild(errorMsg);
+    } finally {
+        loader.style.display = 'none';
     }
 }
-if (!imgUrl) continue; // Skip if no image found
-                    const exists = await checkImageExists(imgUrl);
-                    
-                    if (exists) {
-                        existingImages.push(imgUrl);
-                    } else {
-                        // Stop checking if we find a missing image (assuming sequential numbering)
-                        // Remove this break if you might have gaps in numbering
-                        break;
-                    }
-                }
-                
-                imageUrls = existingImages;
-                
-                if (imageUrls.length === 0) {
-                    const noImagesMsg = document.createElement('div');
-                    noImagesMsg.className = 'no-images';
-                    noImagesMsg.innerHTML = '<p data-en="No uniform images found" data-ar="لا توجد صور للزي الموحد">No uniform images found</p>';
-                    galleryContainer.appendChild(noImagesMsg);
-                    return;
-                }
                 
                 // Create gallery items for existing images only
                 imageUrls.forEach((url, index) => {
