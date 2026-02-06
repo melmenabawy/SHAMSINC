@@ -1295,93 +1295,106 @@
 
         // ==================== SIMPLE PARTNER LOADING ====================
 
-        // Function to check if an image exists
-        async function checkImageExists(url) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(true);
-                img.onerror = () => resolve(false);
-                img.src = url;
-            });
-        }
+// ==================== OPTIMIZED PARTNER LOADING ====================
 
-        // Simple function to load numbered partner images
-        async function loadPartners() {
-            const container = document.getElementById('dynamicPartners');
-            const staticContainer = document.getElementById('staticPartners');
+// Function to check if an image exists
+async function checkImageExists(url) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+    });
+}
+
+// Optimized function to load numbered partner images
+async function loadPartners() {
+    const container = document.getElementById('dynamicPartners');
+    const staticContainer = document.getElementById('staticPartners');
+    
+    // Hide static, show dynamic container
+    staticContainer.style.display = 'none';
+    container.style.display = 'grid';
+    
+    let partnersFound = 0;
+    let consecutiveMisses = 0;
+    const maxConsecutiveMisses = 5; // Stop after 5 consecutive misses
+    
+    // Check for partners 1-20 (reasonable range)
+    for (let i = 1; i <= 20; i++) {
+        // If we've had too many consecutive misses, stop checking
+        if (consecutiveMisses >= maxConsecutiveMisses) {
+            console.log(`Stopped checking after ${maxConsecutiveMisses} consecutive misses`);
+            break;
+        }
+        
+        let foundThisPartner = false;
+        
+        // Try multiple extensions (prioritize most common first)
+        const extensions = ['.png', '.jpg', '.webp', '.svg', '.jpeg', '.gif'];
+        
+        for (const ext of extensions) {
+            const filename = `partner${i}${ext}`;
+            const imgUrl = `images/Partners/${filename}`;
             
-            // Hide static, show dynamic container
-            staticContainer.style.display = 'none';
-            container.style.display = 'grid';
-            
-            let partnersFound = 0;
-            
-            // Check for partners 1-100 (increase if you need more)
-            for (let i = 1; i <= 15; i++) {
-                // Try multiple extensions (all lowercase for consistency)
-                const extensions = ['.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif'];
+            if (await checkImageExists(imgUrl)) {
+                // Create partner element
+                const partnerDiv = document.createElement('div');
+                partnerDiv.className = 'partner-logo';
                 
-                for (const ext of extensions) {
-                    const filename = `partner${i}${ext}`;
-                    const imgUrl = `images/Partners/${filename}`;
-                    
-                    if (await checkImageExists(imgUrl)) {
-                        // Create partner element
-                        const partnerDiv = document.createElement('div');
-                        partnerDiv.className = 'partner-logo';
-                        
-                        const img = document.createElement('img');
-                        img.src = imgUrl;
-                        img.alt = `Partner ${i}`;
-                        img.title = `Partner ${i}`;
-                        img.loading = 'lazy';
-                        
-                        partnerDiv.appendChild(img);
-                        container.appendChild(partnerDiv);
-                        partnersFound++;
-                        break; // Found this partner, move to next number
-                    }
-                }
-            }
-            
-            // If no partners found, show instructions
-            if (partnersFound === 0) {
-                container.innerHTML = `
-                    <div class="no-partners">
-                        <p data-en="No partner logos found. Please add files named partner1.png, partner2.jpg, etc. to the images/Partners/ folder." 
-                           data-ar="لم يتم العثور على شعارات الشركاء. الرجاء إضافة ملفات بأسماء partner1.png, partner2.jpg، إلخ. إلى مجلد images/Partners/">
-                           No partner logos found. Please add files named partner1.png, partner2.jpg, etc. to the images/Partners/ folder.
-                        </p>
-                        <div style="margin-top: 20px; background: #f8f9fa; padding: 15px; border-radius: 5px;">
-                            <strong>📋 Simple Instructions:</strong>
-                            <ol style="margin: 10px 0 0 20px;">
-                                <li>Rename your logo files to: <code>partner1.png</code>, <code>partner2.jpg</code>, etc.</li>
-                                <li>Put them in: <code>images/Partners/</code> folder</li>
-                                <li>Refresh this page</li>
-                            </ol>
-                            <div style="margin-top: 15px; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 4px;">
-                                <strong>Example:</strong>
-                                <pre style="margin: 5px 0; font-size: 12px;">
-images/
-└── Partners/
-    ├── partner1.png    (was EFISM.png)
-    ├── partner2.svg    (was SGH.svg)
-    ├── partner3.webp   (was UnitedPharmacy.webp)
-    ├── partner4.png    (was Johnson.png)
-    └── partner5.svg    (was Virgin.svg)</pre>
-                            </div>
-                            <p style="margin-top: 10px; font-size: 14px; color: #666;">
-                                ✅ Supported formats: .png, .jpg, .jpeg, .webp, .svg, .gif
-                            </p>
-                        </div>
-                    </div>
-                `;
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                img.alt = `Partner ${i}`;
+                img.title = `Partner ${i}`;
+                img.loading = 'lazy';
+                
+                partnerDiv.appendChild(img);
+                container.appendChild(partnerDiv);
+                partnersFound++;
+                foundThisPartner = true;
+                consecutiveMisses = 0; // Reset consecutive misses
+                console.log(`✅ Found partner: ${filename}`);
+                break; // Found this partner, move to next number
             }
         }
+        
+        if (!foundThisPartner) {
+            consecutiveMisses++;
+        }
+    }
+    
+    // If no partners found, show instructions
+    if (partnersFound === 0) {
+        container.innerHTML = `
+            <div class="no-partners">
+                <p data-en="No partner logos found. Please add files named partner1.png, partner2.jpg, etc. to the images/Partners/ folder." 
+                   data-ar="لم يتم العثور على شعارات الشركاء. الرجاء إضافة ملفات بأسماء partner1.png, partner2.jpg، إلخ. إلى مجلد images/Partners/">
+                   No partner logos found. Please add files named partner1.png, partner2.jpg, etc. to the images/Partners/ folder.
+                </p>
+                <div style="margin-top: 20px; background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                    <strong>📋 Current Setup:</strong>
+                    <p style="margin: 10px 0;">
+                        Currently checking for: <code>partner1.png</code> through <code>partner20.gif</code>
+                    </p>
+                    <strong>To Add Partners:</strong>
+                    <ol style="margin: 10px 0 0 20px;">
+                        <li>Rename your logo files to: <code>partner1.png</code>, <code>partner2.jpg</code>, etc.</li>
+                        <li>Put them in: <code>images/Partners/</code> folder</li>
+                        <li>Refresh this page</li>
+                    </ol>
+                </div>
+            </div>
+        `;
+    } else {
+        console.log(`✅ Successfully loaded ${partnersFound} partner(s)`);
+    }
+}
 
-        // Load partners when page loads
-        document.addEventListener('DOMContentLoaded', loadPartners);
-
+// Load partners when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Loading partners...');
+    loadPartners();
+});
         // ==================== GALLERY MODAL FUNCTIONALITY ====================
         let currentGallery = '';
         let currentIndex = 0;
