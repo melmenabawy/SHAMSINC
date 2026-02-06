@@ -379,43 +379,22 @@
             opacity: 1;
         }
         
-        /* Partners Slider (Alternative Layout) */
-        .partners-slider-container {
-            overflow: hidden;
-            position: relative;
-            padding: 20px 0;
+        /* Loading state for partners */
+        .loading-partners {
+            text-align: center;
+            padding: 40px;
+            font-style: italic;
+            color: var(--text-color);
+            grid-column: 1 / -1;
         }
         
-        .partners-slider {
-            display: flex;
-            animation: slideLeft 30s linear infinite;
-            gap: 40px;
-        }
-        
-        .partners-slider:hover {
-            animation-play-state: paused;
-        }
-        
-        .partner-slide {
-            flex: 0 0 auto;
-            width: 150px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        @keyframes slideLeft {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
+        /* Empty state for partners */
+        .no-partners {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-color);
+            font-style: italic;
+            grid-column: 1 / -1;
         }
         
         /* Contact Section */
@@ -867,22 +846,6 @@
         max-width: none;
     }
 }
-
-/* Loading state for partners */
-.loading-partners {
-    text-align: center;
-    padding: 40px;
-    font-style: italic;
-    color: var(--text-color);
-}
-
-/* Empty state for partners */
-.no-partners {
-    text-align: center;
-    padding: 40px;
-    color: var(--text-color);
-    font-style: italic;
-}
     </style>
 </head>
 <body>
@@ -1059,7 +1022,7 @@
                 <h2 data-en="Our Partners" data-ar="شركاؤنا">Our Partners</h2>
             </div>
             
-            <!-- Static Partners (fallback) -->
+            <!-- Static Partners (loading message) -->
             <div id="staticPartners" class="partners-grid">
                 <div class="loading-partners" data-en="Loading partners..." data-ar="جارٍ تحميل الشركاء...">
                     Loading partners...
@@ -1068,14 +1031,7 @@
             
             <!-- Dynamic Partners will be loaded here -->
             <div id="dynamicPartners" class="partners-grid" style="display: none;">
-                <!-- Partners will be dynamically added here -->
-            </div>
-            
-            <!-- Alternative slider layout (optional) -->
-            <div id="partnersSlider" class="partners-slider-container" style="display: none;">
-                <div class="partners-slider">
-                    <!-- Partners will be dynamically added here -->
-                </div>
+                <!-- Partners 1-100 will be automatically loaded -->
             </div>
         </div>
     </section>
@@ -1337,87 +1293,95 @@
             }
         });
 
+        // ==================== SIMPLE PARTNER LOADING ====================
 
+        // Function to check if an image exists
+        async function checkImageExists(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        }
 
-
-
-        
-// ==================== SIMPLE PARTNER LOADING ====================
-
-async function loadPartners() {
-    const container = document.getElementById('dynamicPartners');
-    const staticContainer = document.getElementById('staticPartners');
-    
-    // Hide static, show dynamic
-    staticContainer.style.display = 'none';
-    container.style.display = 'grid';
-    
-    // Check for partners 1-50 (you can increase if needed)
-    for (let i = 1; i <= 50; i++) {
-        // Try multiple extensions
-        const extensions = ['.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif'];
-        
-        for (const ext of extensions) {
-            const filename = `partner${i}${ext}`;
-            const imgUrl = `images/Partners/${filename}`;
+        // Simple function to load numbered partner images
+        async function loadPartners() {
+            const container = document.getElementById('dynamicPartners');
+            const staticContainer = document.getElementById('staticPartners');
             
-            if (await checkImageExists(imgUrl)) {
-                // Create partner element
-                const partnerDiv = document.createElement('div');
-                partnerDiv.className = 'partner-logo';
+            // Hide static, show dynamic container
+            staticContainer.style.display = 'none';
+            container.style.display = 'grid';
+            
+            let partnersFound = 0;
+            
+            // Check for partners 1-100 (increase if you need more)
+            for (let i = 1; i <= 100; i++) {
+                // Try multiple extensions (all lowercase for consistency)
+                const extensions = ['.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif'];
                 
-                const img = document.createElement('img');
-                img.src = imgUrl;
-                img.alt = `Partner ${i}`;
-                img.title = `Partner ${i}`;
-                img.loading = 'lazy';
-                
-                partnerDiv.appendChild(img);
-                container.appendChild(partnerDiv);
-                break; // Found this partner, move to next number
+                for (const ext of extensions) {
+                    const filename = `partner${i}${ext}`;
+                    const imgUrl = `images/Partners/${filename}`;
+                    
+                    if (await checkImageExists(imgUrl)) {
+                        // Create partner element
+                        const partnerDiv = document.createElement('div');
+                        partnerDiv.className = 'partner-logo';
+                        
+                        const img = document.createElement('img');
+                        img.src = imgUrl;
+                        img.alt = `Partner ${i}`;
+                        img.title = `Partner ${i}`;
+                        img.loading = 'lazy';
+                        
+                        partnerDiv.appendChild(img);
+                        container.appendChild(partnerDiv);
+                        partnersFound++;
+                        break; // Found this partner, move to next number
+                    }
+                }
+            }
+            
+            // If no partners found, show instructions
+            if (partnersFound === 0) {
+                container.innerHTML = `
+                    <div class="no-partners">
+                        <p data-en="No partner logos found. Please add files named partner1.png, partner2.jpg, etc. to the images/Partners/ folder." 
+                           data-ar="لم يتم العثور على شعارات الشركاء. الرجاء إضافة ملفات بأسماء partner1.png, partner2.jpg، إلخ. إلى مجلد images/Partners/">
+                           No partner logos found. Please add files named partner1.png, partner2.jpg, etc. to the images/Partners/ folder.
+                        </p>
+                        <div style="margin-top: 20px; background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                            <strong>📋 Simple Instructions:</strong>
+                            <ol style="margin: 10px 0 0 20px;">
+                                <li>Rename your logo files to: <code>partner1.png</code>, <code>partner2.jpg</code>, etc.</li>
+                                <li>Put them in: <code>images/Partners/</code> folder</li>
+                                <li>Refresh this page</li>
+                            </ol>
+                            <div style="margin-top: 15px; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 4px;">
+                                <strong>Example:</strong>
+                                <pre style="margin: 5px 0; font-size: 12px;">
+images/
+└── Partners/
+    ├── partner1.png    (was EFISM.png)
+    ├── partner2.svg    (was SGH.svg)
+    ├── partner3.webp   (was UnitedPharmacy.webp)
+    ├── partner4.png    (was Johnson.png)
+    └── partner5.svg    (was Virgin.svg)</pre>
+                            </div>
+                            <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                                ✅ Supported formats: .png, .jpg, .jpeg, .webp, .svg, .gif
+                            </p>
+                        </div>
+                    </div>
+                `;
             }
         }
-    }
-    
-    // If no partners found
-    if (container.children.length === 0) {
-        container.innerHTML = `
-            <div class="no-partners">
-                <p data-en="No partner logos found. Please add files named partner1.png, partner2.jpg, etc. to the images/Partners/ folder." 
-                   data-ar="لم يتم العثور على شعارات الشركاء. الرجاء إضافة ملفات بأسماء partner1.png, partner2.jpg، إلخ. إلى مجلد images/Partners/">
-                   No partner logos found. Please add files named partner1.png, partner2.jpg, etc. to the images/Partners/ folder.
-                </p>
-                <div style="margin-top: 20px; background: #f8f9fa; padding: 15px; border-radius: 5px;">
-                    <strong>How to add partners:</strong>
-                    <ol style="margin: 10px 0 0 20px;">
-                        <li>Rename your logo to: partner1.png</li>
-                        <li>Put it in: images/Partners/ folder</li>
-                        <li>For next partner: partner2.png</li>
-                        <li>And so on...</li>
-                    </ol>
-                    <p style="margin-top: 10px; font-size: 14px; color: #666;">
-                        Supported formats: .png, .jpg, .jpeg, .webp, .svg, .gif
-                    </p>
-                </div>
-            </div>
-        `;
-    }
-}
 
-// Helper function to check if image exists
-function checkImageExists(url) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(true);
-        img.onerror = () => resolve(false);
-        img.src = url;
-    });
-}
+        // Load partners when page loads
+        document.addEventListener('DOMContentLoaded', loadPartners);
 
-// Load partners when page loads
-document.addEventListener('DOMContentLoaded', loadPartners);
-        
-        
         // ==================== GALLERY MODAL FUNCTIONALITY ====================
         let currentGallery = '';
         let currentIndex = 0;
@@ -1480,11 +1444,6 @@ document.addEventListener('DOMContentLoaded', loadPartners);
         const currentYear = new Date().getFullYear();
         document.getElementById('year-en').textContent = currentYear;
         document.getElementById('year-ar').textContent = currentYear;
-        
-        // Load partners when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            loadPartners();
-        });
     </script>
 </body>
 </html>
