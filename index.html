@@ -341,17 +341,19 @@
         
         .partners-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 30px;
             align-items: center;
+            justify-items: center;
         }
         
         .partner-logo {
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 150px;
             height: 100px;
-            padding: 20px;
+            padding: 15px;
             background-color: var(--white);
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -360,18 +362,60 @@
         
         .partner-logo:hover {
             transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         
         .partner-logo img {
             max-width: 100%;
-            max-height: 60px;
-            opacity: 0.7;
+            max-height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.8;
             transition: var(--transition);
         }
         
         .partner-logo:hover img {
             filter: grayscale(0%);
             opacity: 1;
+        }
+        
+        /* Partners Slider (Alternative Layout) */
+        .partners-slider-container {
+            overflow: hidden;
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .partners-slider {
+            display: flex;
+            animation: slideLeft 30s linear infinite;
+            gap: 40px;
+        }
+        
+        .partners-slider:hover {
+            animation-play-state: paused;
+        }
+        
+        .partner-slide {
+            flex: 0 0 auto;
+            width: 150px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        @keyframes slideLeft {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
         }
         
         /* Contact Section */
@@ -546,6 +590,17 @@
                 font-size: 1.6rem;
                 margin-bottom: 15px;
             }
+            
+            .partners-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 20px;
+            }
+            
+            .partner-logo {
+                width: 120px;
+                height: 80px;
+                padding: 10px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -554,6 +609,17 @@
             }
             .form-control {
                 padding: 12px 14px;
+            }
+            
+            .partners-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .partner-logo {
+                width: 100%;
+                max-width: 140px;
+                height: 70px;
             }
         }
         
@@ -617,6 +683,11 @@
             width: 40px;
             height: 2px;
             background-color: var(--accent-color);
+        }
+        
+        .rtl .footer-links h3::after, .rtl .footer-contact h3::after {
+            left: auto;
+            right: 0;
         }
         
         .footer-links ul {
@@ -796,9 +867,22 @@
         max-width: none;
     }
 }
-        
 
-        
+/* Loading state for partners */
+.loading-partners {
+    text-align: center;
+    padding: 40px;
+    font-style: italic;
+    color: var(--text-color);
+}
+
+/* Empty state for partners */
+.no-partners {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-color);
+    font-style: italic;
+}
     </style>
 </head>
 <body>
@@ -975,30 +1059,22 @@
                 <h2 data-en="Our Partners" data-ar="شركاؤنا">Our Partners</h2>
             </div>
             
-            <div class="partners-grid">
-                <!-- Partner 1 -->
-                <div class="partner-logo">
-                    <img src="images\SGH.svg" alt="Saudi German Hospital">
+            <!-- Static Partners (fallback) -->
+            <div id="staticPartners" class="partners-grid">
+                <div class="loading-partners" data-en="Loading partners..." data-ar="جارٍ تحميل الشركاء...">
+                    Loading partners...
                 </div>
-                
-                <!-- Partner 2 -->
-                <div class="partner-logo">
-                    <img src="images\UnitedPharmacy.webp" alt="United Pharmacy">
-                </div>
-                
-                <!-- Partner 3 -->
-                <div class="partner-logo">
-                    <img src="images\Johnson.png" alt="Johnson Company">
-                </div>
-                
-                <!-- Partner 4 -->
-                <div class="partner-logo">
-                    <img src="images\Virgin.svg" alt="Virgin MegaStore">
-                </div>
-                
-                <!-- Partner 5 -->
-                <div class="partner-logo">
-                    <img src="https://via.placeholder.com/150x60?text=Shams+Travel" alt="Shams Travel & Tourism">
+            </div>
+            
+            <!-- Dynamic Partners will be loaded here -->
+            <div id="dynamicPartners" class="partners-grid" style="display: none;">
+                <!-- Partners will be dynamically added here -->
+            </div>
+            
+            <!-- Alternative slider layout (optional) -->
+            <div id="partnersSlider" class="partners-slider-container" style="display: none;">
+                <div class="partners-slider">
+                    <!-- Partners will be dynamically added here -->
                 </div>
             </div>
         </div>
@@ -1261,7 +1337,160 @@
             }
         });
 
-        // Gallery Modal Functionality
+        // ==================== DYNAMIC PARTNER LOADING ====================
+        
+        // Function to check if an image exists
+        async function checkImageExists(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        }
+        
+        // Function to load partners from images/Partners folder
+        async function loadPartners() {
+            const dynamicPartnersContainer = document.getElementById('dynamicPartners');
+            const staticPartnersContainer = document.getElementById('staticPartners');
+            const partnersSliderContainer = document.getElementById('partnersSlider');
+            const partnersSlider = document.querySelector('.partners-slider');
+            
+            try {
+                // Hide static partners
+                staticPartnersContainer.style.display = 'none';
+                
+                // Show dynamic partners container
+                dynamicPartnersContainer.style.display = 'grid';
+                
+                // Supported image extensions
+                const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.jfif'];
+                const partners = [];
+                
+                // Check for sequentially numbered partner images
+                let partnerNumber = 1;
+                let foundPartners = false;
+                
+                // First, try numbered partners (partner1.jpg, partner2.jpg, etc.)
+                while (partnerNumber <= 50) { // Check up to 50 partners
+                    let foundForThisNumber = false;
+                    
+                    for (const ext of imageExtensions) {
+                        const imgUrl = `images/Partners/partner${partnerNumber}${ext}`;
+                        if (await checkImageExists(imgUrl)) {
+                            partners.push({
+                                src: imgUrl,
+                                alt: `Partner ${partnerNumber}`,
+                                name: `Partner ${partnerNumber}`
+                            });
+                            foundForThisNumber = true;
+                            foundPartners = true;
+                            break; // Found this partner, move to next number
+                        }
+                    }
+                    
+                    // Also check for extension variations
+                    if (!foundForThisNumber) {
+                        const imgUrlUpper = `images/Partners/partner${partnerNumber}.JPG`;
+                        if (await checkImageExists(imgUrlUpper)) {
+                            partners.push({
+                                src: imgUrlUpper,
+                                alt: `Partner ${partnerNumber}`,
+                                name: `Partner ${partnerNumber}`
+                            });
+                            foundForThisNumber = true;
+                            foundPartners = true;
+                        }
+                    }
+                    
+                    partnerNumber++;
+                }
+                
+                // If no numbered partners found, try to find any image in the Partners folder
+                if (!foundPartners) {
+                    // Common partner file names to check
+                    const commonPartnerNames = [
+                        'SGH.svg', 'UnitedPharmacy.webp', 'Johnson.png', 'Virgin.svg',
+                        'partner', 'partner-logo', 'client', 'client-logo', 'company', 'company-logo'
+                    ];
+                    
+                    for (const name of commonPartnerNames) {
+                        for (const ext of imageExtensions) {
+                            const imgUrl = `images/Partners/${name}${ext}`;
+                            if (await checkImageExists(imgUrl)) {
+                                partners.push({
+                                    src: imgUrl,
+                                    alt: name,
+                                    name: name
+                                });
+                                foundPartners = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // If still no partners found, show fallback message
+                if (partners.length === 0) {
+                    const noPartnersMsg = document.createElement('div');
+                    noPartnersMsg.className = 'no-partners';
+                    noPartnersMsg.innerHTML = '<p data-en="No partner logos found. Please add logos to the images/Partners folder." data-ar="لم يتم العثور على شعارات الشركاء. الرجاء إضافة الشعارات إلى مجلد images/Partners.">No partner logos found. Please add logos to the images/Partners folder.</p>';
+                    dynamicPartnersContainer.appendChild(noPartnersMsg);
+                    return;
+                }
+                
+                // Create partner elements
+                partners.forEach((partner, index) => {
+                    // Create for grid layout
+                    const partnerElement = document.createElement('div');
+                    partnerElement.className = 'partner-logo';
+                    
+                    const img = document.createElement('img');
+                    img.src = partner.src;
+                    img.alt = partner.alt;
+                    img.title = partner.name;
+                    img.loading = 'lazy';
+                    
+                    partnerElement.appendChild(img);
+                    dynamicPartnersContainer.appendChild(partnerElement);
+                    
+                    // Also create for slider layout (duplicate for continuous scrolling effect)
+                    if (partnersSlider) {
+                        const slideElement = document.createElement('div');
+                        slideElement.className = 'partner-slide';
+                        
+                        const slideImg = document.createElement('img');
+                        slideImg.src = partner.src;
+                        slideImg.alt = partner.alt;
+                        slideImg.title = partner.name;
+                        slideImg.loading = 'lazy';
+                        
+                        slideElement.appendChild(slideImg);
+                        partnersSlider.appendChild(slideElement);
+                        
+                        // Duplicate for seamless scrolling
+                        const slideElementClone = slideElement.cloneNode(true);
+                        partnersSlider.appendChild(slideElementClone);
+                    }
+                });
+                
+                // Show slider if there are enough partners (optional feature)
+                if (partners.length >= 6 && partnersSliderContainer) {
+                    // partnersSliderContainer.style.display = 'block'; // Uncomment to use slider
+                }
+                
+            } catch (error) {
+                console.error('Error loading partners:', error);
+                
+                // Show error message
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'no-partners';
+                errorMsg.innerHTML = '<p data-en="Error loading partner logos" data-ar="حدث خطأ في تحميل شعارات الشركاء">Error loading partner logos</p>';
+                dynamicPartnersContainer.appendChild(errorMsg);
+            }
+        }
+        
+        // ==================== GALLERY MODAL FUNCTIONALITY ====================
         let currentGallery = '';
         let currentIndex = 0;
         let currentImages = [];
@@ -1323,6 +1552,11 @@
         const currentYear = new Date().getFullYear();
         document.getElementById('year-en').textContent = currentYear;
         document.getElementById('year-ar').textContent = currentYear;
+        
+        // Load partners when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPartners();
+        });
     </script>
 </body>
 </html>
