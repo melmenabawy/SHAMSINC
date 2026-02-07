@@ -334,57 +334,139 @@
             color: var(--secondary-color);
         }
         
-        /* Partners Section */
-        .partners {
-            background-color: var(--light-color);
-        }
-        
-        .partners-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 30px;
-            align-items: center;
-            justify-items: center;
-        }
-        
-        .partner-logo {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 150px;
-            height: 100px;
-            padding: 15px;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: var(--transition);
-        }
-        
-        .partner-logo:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        
-        .partner-logo img {
+        /* Partners Section Improvements */
+.partners {
+    background-color: var(--light-color);
+    text-align: center;
+}
+
+.section-title p {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    max-width: 800px;
+    margin: 15px auto 0;
+    line-height: 1.6;
+}
+
+.disclaimer {
+    text-align: center;
+    margin-bottom: 30px;
+    font-style: italic;
+    color: #666;
+    font-size: 0.9rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+}
+
+.rtl .section-title p,
+.rtl .disclaimer p {
+    font-family: 'Arial', 'Tahoma', sans-serif;
+}
+
+.partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 30px;
+    align-items: center;
+    justify-items: center;
+    margin-top: 20px;
+}
+
+.partner-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 100px;
+    padding: 15px;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
+}
+
+.partner-logo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.partner-logo img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    opacity: 1; /* Full opacity */
+    opacity: 1;
     transition: var(--transition);
 }
 
 .partner-logo:hover img {
-    transform: scale(1.1); /* Optional zoom effect */
+    transform: scale(1.1);
 }
-        
-        /* Loading state for partners */
-        .loading-partners {
-            text-align: center;
-            padding: 40px;
-            font-style: italic;
-            color: var(--text-color);
-            grid-column: 1 / -1;
-        }
+
+/* Loading state for partners */
+.loading-partners {
+    text-align: center;
+    padding: 40px;
+    font-style: italic;
+    color: var(--text-color);
+    grid-column: 1 / -1;
+}
+
+/* Empty state for partners */
+.no-partners {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-color);
+    font-style: italic;
+    grid-column: 1 / -1;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+    .partners-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 20px;
+    }
+    
+    .partner-logo {
+        width: 120px;
+        height: 80px;
+        padding: 10px;
+    }
+    
+    .section-title p {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+    
+    .disclaimer {
+        font-size: 0.85rem;
+        padding: 10px 15px;
+        margin: 0 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .partners-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .partner-logo {
+        width: 100%;
+        max-width: 140px;
+        height: 70px;
+    }
+    
+    .section-title h2 {
+        font-size: 1.8rem;
+    }
+}
         
         /* Empty state for partners */
         .no-partners {
@@ -1014,26 +1096,37 @@
     </section>
 
     <!-- Partners Section -->
-    <section class="section partners" id="partners">
-        <div class="container">
-            <div class="section-title">
-                <h2 data-en="Our Partners" data-ar="شركاؤنا">Our Partners</h2>
-            </div>
-            
-            <!-- Static Partners (loading message) -->
-            <div id="staticPartners" class="partners-grid">
-                <div class="loading-partners" data-en="Loading partners..." data-ar="جارٍ تحميل الشركاء...">
-                    Loading partners...
-                </div>
-            </div>
-            
-            <!-- Dynamic Partners will be loaded here -->
-            <div id="dynamicPartners" class="partners-grid" style="display: none;">
-                <!-- Partners 1-100 will be automatically loaded -->
+<section class="section partners" id="partners">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-en="Partners in Our Success" data-ar="شركاء النجاح">Partners in Our Success</h2>
+            <p data-en="We are proud to have supported a number of organizations by supplying uniforms for their internal staff use." 
+               data-ar="نفخر بدعم عدد من الجهات من خلال توريد الزي الموحد لاستخدامه الداخلي لموظفيها.">
+               We are proud to have supported a number of organizations by supplying uniforms for their internal staff use.
+            </p>
+        </div>
+        
+        <!-- Disclaimer -->
+        <div class="disclaimer">
+            <p data-en="Logos are displayed for identification purposes only and do not imply partnership or endorsement." 
+               data-ar="تُعرض الشعارات لأغراض التعريف فقط ولا تعني شراكة تجارية أو اعتمادًا رسميًا.">
+               Logos are displayed for identification purposes only and do not imply partnership or endorsement.
+            </p>
+        </div>
+        
+        <!-- Static Partners (loading message) -->
+        <div id="staticPartners" class="partners-grid">
+            <div class="loading-partners" data-en="Loading partners..." data-ar="جارٍ تحميل الشركاء...">
+                Loading partners...
             </div>
         </div>
-    </section>
-
+        
+        <!-- Dynamic Partners will be loaded here -->
+        <div id="dynamicPartners" class="partners-grid" style="display: none;">
+            <!-- Partners 1-20 will be automatically loaded -->
+        </div>
+    </div>
+</section>
     <!-- Contact Section -->
     <section class="contact" id="contact">
         <div class="container contact-container">
