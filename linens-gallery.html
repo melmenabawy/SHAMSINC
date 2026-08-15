@@ -735,35 +735,28 @@
         const galleryContainer = document.getElementById('linensGallery');
         const loader = document.getElementById('loader');
         
-        // Function to check if an image exists
-        function checkImageExists(url) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(true);
-                img.onerror = () => resolve(false);
-                img.src = url;
-            });
-        }
-        
-        // Function to load only existing linen images
+        // Known linen images (images/linens/) — listed directly instead of
+        // probing each filename over the network. Add new files to this list.
+        const LINEN_FILES = [
+            'images/linens/linen1.jpg',
+            'images/linens/linen2.jpg',
+            'images/linens/linen3.jpg',
+            'images/linens/linen4.jpg',
+            'images/linens/linen5.jpg',
+            'images/linens/linen6.jpg',
+            'images/linens/linen7.jpg',
+            'images/linens/linen8.jpg'
+        ];
+
+        // Function to load linen images
         async function loadLinenImages() {
             loader.style.display = 'block';
             galleryContainer.innerHTML = '';
             imageUrls = [];
-            
+
             try {
-                // Set this to the maximum number of images you have
-                const maxImagesToCheck = 8; // CHANGE THIS to your actual maximum image count
-                
-                // Check for sequentially numbered images
-                for (let i = 1; i <= maxImagesToCheck; i++) {
-                    const imgUrl = `images/linens/linen${i}.jpg`;
-                    if (await checkImageExists(imgUrl)) {
-                        imageUrls.push(imgUrl);
-                    }
-                    // Continue checking even if some numbers are missing
-                }
-                
+                imageUrls = LINEN_FILES.slice();
+
                 if (imageUrls.length === 0) {
                     const noImagesMsg = document.createElement('div');
                     noImagesMsg.className = 'no-images';

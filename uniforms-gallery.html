@@ -735,42 +735,19 @@
         const galleryContainer = document.getElementById('uniformsGallery');
         const loader = document.getElementById('loader');
         
-        // Function to check if an image exists
-        function checkImageExists(url) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(true);
-                img.onerror = () => resolve(false);
-                img.src = url;
-            });
-        }
-        
-        // Function to load all uniform images
+        // Known uniform images (images/uniforms/) — listed directly instead of
+        // probing each filename over the network. Add new files to this list.
+        const UNIFORM_FILES = Array.from({ length: 23 }, (_, i) => `images/uniforms/uniform${i + 1}.jpg`);
+
+        // Function to load uniform images
         async function loadUniformImages() {
             loader.style.display = 'block';
             galleryContainer.innerHTML = '';
             imageUrls = [];
-            
-            try {
-                let i = 1;
-                let imagesFound = 0;
-                const maxAttempts = 50; // Safety limit to prevent infinite loops
 
-                while (imagesFound < maxAttempts) {
-                    const imgUrl = `images/uniforms/uniform${i}.jpg`;
-                    if (await checkImageExists(imgUrl)) {
-                        imageUrls.push(imgUrl);
-                        i++;
-                        imagesFound = 0; // Reset counter
-                    } else {
-                        imagesFound++;
-                        i++;
-                    }
-                    
-                    // Break if we haven't found any new images in the last 5 checks
-                    if (imagesFound > 5) break;
-                }
-                
+            try {
+                imageUrls = UNIFORM_FILES.slice();
+
                 if (imageUrls.length === 0) {
                     const noImagesMsg = document.createElement('div');
                     noImagesMsg.className = 'no-images';

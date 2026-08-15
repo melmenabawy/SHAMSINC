@@ -735,56 +735,24 @@
         const galleryContainer = document.getElementById('accessoriesGallery');
         const loader = document.getElementById('loader');
         
-        // Function to check if an image exists
-        function checkImageExists(url) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(true);
-                img.onerror = () => resolve(false);
-                img.src = url;
-            });
-        }
-        
-        // Function to load only existing accessory images
+        // Known accessory images (images/accessories/) — listed directly instead
+        // of probing every filename over the network. Add new files to this list.
+        const ACCESSORY_FILES = [
+            { src: 'images/accessories/cards1.jpg', alt: 'Business Card Design 1' },
+            { src: 'images/accessories/cards2.jpg', alt: 'Business Card Design 2' },
+            { src: 'images/accessories/cards3.jpg', alt: 'Business Card Design 3' },
+            { src: 'images/accessories/cards4.jpg', alt: 'Business Card Design 4' }
+        ];
+
+        // Function to load accessory images
         async function loadAccessoryImages() {
             loader.style.display = 'block';
             galleryContainer.innerHTML = '';
             imageUrls = [];
-            
+
             try {
-                // Business Cards
-                for (let i = 1; i <= 4; i++) {
-                    const imgUrl = `images/accessories/cards${i}.jpg`;
-                    if (await checkImageExists(imgUrl)) {
-                        imageUrls.push({
-                            src: imgUrl,
-                            alt: `Business Card Design ${i}`
-                        });
-                    }
-                }
-                
-                // Promotional Gifts
-                for (let i = 1; i <= 4; i++) {
-                    const imgUrl = `images/accessories/gifts${i}.jpg`;
-                    if (await checkImageExists(imgUrl)) {
-                        imageUrls.push({
-                            src: imgUrl,
-                            alt: `Promotional Gift ${i}`
-                        });
-                    }
-                }
-                
-                // Corporate Branding
-                for (let i = 1; i <= 4; i++) {
-                    const imgUrl = `images/accessories/branding${i}.jpg`;
-                    if (await checkImageExists(imgUrl)) {
-                        imageUrls.push({
-                            src: imgUrl,
-                            alt: `Corporate Branding ${i}`
-                        });
-                    }
-                }
-                
+                imageUrls = ACCESSORY_FILES.slice();
+
                 if (imageUrls.length === 0) {
                     const noImagesMsg = document.createElement('div');
                     noImagesMsg.className = 'no-images';

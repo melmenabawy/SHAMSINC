@@ -933,7 +933,7 @@
     <header>
         <div class="container header-container">
             <div class="logo-container">
-                <img src="images\SHAMSINC.webp" alt="Shams Inc. Logo" class="logo">
+                <img src="images/SHAMSINC.webp" alt="Shams Inc. Logo" class="logo">
             </div>
             
             <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -987,7 +987,7 @@
                 </div>
                 
                 <div class="about-image">
-                    <img src="images\Missinon and vision.png" alt="About Shams Inc.">
+                    <img src="images/Missinon and vision.jpg" alt="About Shams Inc." loading="lazy">
                 </div>
             </div>
         </div>
@@ -1004,7 +1004,7 @@
               <!-- Service 1 - Uniforms -->
 <div class="service-card">
     <div class="service-img">
-        <img src="images/Uniform.jpg" alt="Uniforms">
+        <img src="images/Uniform.jpg" alt="Uniforms" loading="lazy">
     </div>
     <div class="service-content">
         <h3 data-en="Custom Uniforms" data-ar="الزي الرسمي الموحد">Custom Uniforms</h3>
@@ -1016,7 +1016,7 @@
 <!-- Service 2 - Linens -->
 <div class="service-card">
     <div class="service-img">
-        <img src="images/Linen.jpg" alt="Medical & Hospitality Textiles">
+        <img src="images/Linen.jpg" alt="Medical & Hospitality Textiles" loading="lazy">
     </div>
     <div class="service-content">
         <h3 data-en="Medical & Hospitality Textiles" data-ar="منسوجات طبية وفندقية">Medical & Hospitality Textiles</h3>
@@ -1028,7 +1028,7 @@
 <!-- Service 3 - Accessories -->
     <div class="service-card">
     <div class="service-img">
-        <img src="images/Business accessories.jpg" alt="Business Accessories">
+        <img src="images/Business accessories.jpg" alt="Business Accessories" loading="lazy">
     </div>
     <div class="service-content">
         <h3 data-en="Business Accessories" data-ar="الاكسسوارات التجارية">Business Accessories</h3>
@@ -1232,7 +1232,7 @@
         <div class="container">
             <div class="footer-container">
                 <div class="footer-about">
-                    <img src="images\SHAMSINC.webp" class="footer-logo">
+                    <img src="images/SHAMSINC.webp" class="footer-logo" loading="lazy">
                     <p data-en="We are committed to providing high-quality uniforms and Medical & Hospitality Textiles to businesses across Saudi Arabia. Guided by our dedication to excellence, professionalism, and customer satisfaction, we support the Kingdom's vision for regional and global growth. Through our products and services, we empower organizations to strengthen their brand identity and compete effectively in diverse sectors." data-ar="نحن ملتزمون بتوفير زي رسمي عالي الجودة ومنسوجات طبية وفندقية للشركات في جميع أنحاء المملكة العربية السعودية. مسترشدين بتفانينا في التميز والاحترافية ورضا العملاء، ندعم رؤية المملكة للنمو الإقليمي والعالمي. من خلال منتجاتنا وخدماتنا، نمكّن المؤسسات من تعزيز هويتها التجارية والمنافسة بفعالية في مختلف القطاعات.">We are committed to providing high-quality uniforms and Medical & Hospitality Textiles to businesses across Saudi Arabia. Guided by our dedication to excellence, professionalism, and customer satisfaction, we support the Kingdom's vision for regional and global growth. Through our products and services, we empower organizations to strengthen their brand identity and compete effectively in diverse sectors.</p>
                     
                     <div class="social-links">
@@ -1384,106 +1384,57 @@
             }
         });
 
-        // ==================== SIMPLE PARTNER LOADING ====================
+        // ==================== PARTNER LOADING ====================
 
-// ==================== OPTIMIZED PARTNER LOADING ====================
+// Known partner logo files (images/Partners/) — listed directly instead of
+// probing every number x extension combination over the network.
+const PARTNER_FILES = [
+    'partner1.png',
+    'partner2.svg',
+    'partner3.svg',
+    'partner4.webp',
+    'partner5.png',
+    'partner6.png',
+    'partner7.svg'
+];
 
-// Function to check if an image exists
-async function checkImageExists(url) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(true);
-        img.onerror = () => resolve(false);
-        img.src = url;
-    });
-}
-
-// Optimized function to load numbered partner images
-async function loadPartners() {
+function loadPartners() {
     const container = document.getElementById('dynamicPartners');
     const staticContainer = document.getElementById('staticPartners');
-    
+
     // Hide static, show dynamic container
     staticContainer.style.display = 'none';
     container.style.display = 'grid';
-    
-    let partnersFound = 0;
-    let consecutiveMisses = 0;
-    const maxConsecutiveMisses = 5; // Stop after 5 consecutive misses
-    
-    // Check for partners 1-20 (reasonable range)
-    for (let i = 1; i <= 20; i++) {
-        // If we've had too many consecutive misses, stop checking
-        if (consecutiveMisses >= maxConsecutiveMisses) {
-            console.log(`Stopped checking after ${maxConsecutiveMisses} consecutive misses`);
-            break;
-        }
-        
-        let foundThisPartner = false;
-        
-        // Try multiple extensions (prioritize most common first)
-        const extensions = ['.png', '.jpg', '.webp', '.svg', '.jpeg', '.gif'];
-        
-        for (const ext of extensions) {
-            const filename = `partner${i}${ext}`;
-            const imgUrl = `images/Partners/${filename}`;
-            
-            if (await checkImageExists(imgUrl)) {
-                // Create partner element
-                const partnerDiv = document.createElement('div');
-                partnerDiv.className = 'partner-logo';
-                
-                const img = document.createElement('img');
-                img.src = imgUrl;
-                img.alt = `Partner ${i}`;
-                img.title = `Partner ${i}`;
-                img.loading = 'lazy';
-                
-                partnerDiv.appendChild(img);
-                container.appendChild(partnerDiv);
-                partnersFound++;
-                foundThisPartner = true;
-                consecutiveMisses = 0; // Reset consecutive misses
-                console.log(`✅ Found partner: ${filename}`);
-                break; // Found this partner, move to next number
-            }
-        }
-        
-        if (!foundThisPartner) {
-            consecutiveMisses++;
-        }
-    }
-    
-    // If no partners found, show instructions
-    if (partnersFound === 0) {
+
+    if (PARTNER_FILES.length === 0) {
         container.innerHTML = `
             <div class="no-partners">
-                <p data-en="No partner logos found. Please add files named partner1.png, partner2.jpg, etc. to the images/Partners/ folder." 
-                   data-ar="لم يتم العثور على شعارات الشركاء. الرجاء إضافة ملفات بأسماء partner1.png, partner2.jpg، إلخ. إلى مجلد images/Partners/">
-                   No partner logos found. Please add files named partner1.png, partner2.jpg, etc. to the images/Partners/ folder.
+                <p data-en="No partner logos found. Please add files to the images/Partners/ folder."
+                   data-ar="لم يتم العثور على شعارات الشركاء. الرجاء إضافة ملفات إلى مجلد images/Partners/">
+                   No partner logos found. Please add files to the images/Partners/ folder.
                 </p>
-                <div style="margin-top: 20px; background: #f8f9fa; padding: 15px; border-radius: 5px;">
-                    <strong>📋 Current Setup:</strong>
-                    <p style="margin: 10px 0;">
-                        Currently checking for: <code>partner1.png</code> through <code>partner20.gif</code>
-                    </p>
-                    <strong>To Add Partners:</strong>
-                    <ol style="margin: 10px 0 0 20px;">
-                        <li>Rename your logo files to: <code>partner1.png</code>, <code>partner2.jpg</code>, etc.</li>
-                        <li>Put them in: <code>images/Partners/</code> folder</li>
-                        <li>Refresh this page</li>
-                    </ol>
-                </div>
             </div>
         `;
-    } else {
-        console.log(`✅ Successfully loaded ${partnersFound} partner(s)`);
+        return;
     }
+
+    PARTNER_FILES.forEach((filename, index) => {
+        const partnerDiv = document.createElement('div');
+        partnerDiv.className = 'partner-logo';
+
+        const img = document.createElement('img');
+        img.src = `images/Partners/${filename}`;
+        img.alt = `Partner ${index + 1}`;
+        img.title = `Partner ${index + 1}`;
+        img.loading = 'lazy';
+
+        partnerDiv.appendChild(img);
+        container.appendChild(partnerDiv);
+    });
 }
 
 // Load partners when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Loading partners...');
     loadPartners();
 });
         // ==================== GALLERY MODAL FUNCTIONALITY ====================
